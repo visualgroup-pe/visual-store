@@ -3,7 +3,7 @@
    Cada producto: precio unitario, precio del pack x2, fotos y textos.
    "dropiId" es el ID del producto en Dropi (para cargar el pedido).
    Las fotos vienen del catálogo de Dropi; reemplázalas por fotos
-   propias en assets/img/ cuando las tengas.
+   propias (súbelas al repositorio) cuando las tengas.
    ============================================================ */
 const CDN = "https://d39ru7awumhhs2.cloudfront.net/peru/products/";
 
