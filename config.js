@@ -32,7 +32,7 @@ window.STORE_CONFIG = {
 
   // (Opcional) URL de un Google Apps Script para guardar pedidos y reclamos en Google Sheets.
   // Déjalo vacío para usar solo WhatsApp. Instrucciones en LEEME.md.
-  sheetsWebhook: "",
+  sheetsWebhook: "https://script.google.com/macros/s/AKfycbwwAc0KscVSyK543_PTHwBW5-GGG_yRL5V0LX8feHsjviYJGBoDiBElmRNYAh30UBQ/exec",
 
   // (Opcional) IDs de píxeles publicitarios. Vacío = desactivado.
   metaPixelId: "",
