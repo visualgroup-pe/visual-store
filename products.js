@@ -11,6 +11,7 @@ window.PRODUCTS = [
   /* ---------- NUEVOS: Tech y audio ---------- */
   {
     slug: "smartwatch-ultra-8",
+    top: 1,
     dropiId: 7717,
     nombre: "Smartwatch Ultra 8",
     corto: "Pantalla AMOLED siempre encendida, llamadas y monitoreo de salud en tu muñeca.",
@@ -197,6 +198,7 @@ window.PRODUCTS = [
   },
   {
     slug: "audifonos-estuche-pantalla-tactil",
+    top: 2,
     dropiId: 9667,
     nombre: "Audífonos con estuche de pantalla táctil",
     corto: "Controla música, llamadas y notificaciones desde la pantalla del estuche.",
@@ -383,6 +385,7 @@ window.PRODUCTS = [
   /* ---------- NUEVOS: Belleza y cuidado ---------- */
   {
     slug: "secadora-profesional-2300w",
+    top: 4,
     dropiId: 756,
     nombre: "Secadora de cabello profesional 2300 W",
     corto: "Seca más rápido y deja tu cabello suave y con brillo, como en el salón.",
@@ -705,6 +708,7 @@ window.PRODUCTS = [
   /* ---------- NUEVOS: Auto ---------- */
   {
     slug: "kit-de-limpieza-para-auto",
+    top: 5,
     dropiId: 4504,
     nombre: "Kit de lavado para auto con cepillo giratorio",
     corto: "Lava tu auto en casa con un cepillo que gira solo con la presión del agua.",
@@ -912,6 +916,1133 @@ window.PRODUCTS = [
     ],
     descripcion: "Se coloca sobre la puerta trasera como una funda. Tus hijos viajan frescos y protegidos del sol, y además ayuda a que no entren mosquitos.",
     incluye: ["Mallas para ventanas traseras"]
+  },
+  /* ---------- NUEVOS (lote 2) ---------- */
+  {
+    slug: "consola-retro-m8",
+    top: 3,
+    dropiId: 7748,
+    nombre: "Consola retro M8 inalámbrica",
+    corto: "Miles de juegos clásicos y 2 mandos inalámbricos. Conéctala a tu TV y a jugar.",
+    categoria: "Tech",
+    destacado: false,
+    precio: 169,
+    precioPack: 299,
+    imagenes: [
+      CDN + "7748/17580403781749837574052_d384eee4ea0c0245c2e62a0d0f7cd9ee.jpg",
+      CDN + "7748/1780260297213.jpg"
+    ],
+    beneficios: [
+      "Emuladores de consolas clásicas incorporados",
+      "2 mandos inalámbricos de 2.4 GHz",
+      "Se conecta a cualquier TV por HDMI",
+      "Plug and play: lista para jugar"
+    ],
+    descripcion: "Revive los juegos de tu infancia o compártelos con tus hijos. Conéctala al televisor, enciéndela y elige entre miles de títulos retro para jugar de a dos.",
+    incluye: ["1 consola", "2 mandos inalámbricos", "Cable HDMI", "Cable de alimentación"]
+  },
+  {
+    slug: "smartwatch-d20",
+    dropiId: 7420,
+    nombre: "Smartwatch D20",
+    corto: "Reloj inteligente ligero con notificaciones, pasos y ritmo cardíaco.",
+    categoria: "Tech",
+    destacado: false,
+    precio: 69,
+    precioPack: 119,
+    imagenes: [
+      CDN + "7420/1758003639D20%203%20(1).jpg",
+      CDN + "7420/1758003639D20%202_X-Design%20(1).jpg",
+      CDN + "7420/1758003639D20%201_X-Design%20(1).jpg",
+      CDN + "7420/1758003639D20%205_X-Design%20(1).jpg"
+    ],
+    beneficios: [
+      "Pantalla táctil a color",
+      "Notificaciones de llamadas y mensajes",
+      "Pasos, calorías y ritmo cardíaco",
+      "Resistente a salpicaduras"
+    ],
+    descripcion: "Un smartwatch sencillo y económico para el día a día. Ideal para empezar o para regalar. Colores según stock.",
+    incluye: ["1 smartwatch", "Cable de carga"]
+  },
+  {
+    slug: "smartwatch-7-en-1",
+    dropiId: 7308,
+    nombre: "Smartwatch Ultra con 7 correas",
+    corto: "Reloj inteligente con carga inalámbrica y 7 correas para cambiar de estilo.",
+    categoria: "Tech",
+    destacado: false,
+    precio: 109,
+    precioPack: 189,
+    imagenes: [
+      CDN + "7308/1752222309SMART1.png",
+      CDN + "7308/1752222309SMART2.png",
+      CDN + "7308/1752222309SMART3.png",
+      CDN + "7308/1752222309SMART%204.png"
+    ],
+    beneficios: [
+      "Incluye 7 correas intercambiables",
+      "Carga inalámbrica",
+      "Salud, deporte y notificaciones",
+      "Compatible con Android y iPhone"
+    ],
+    descripcion: "Un reloj para cada ocasión: cambia de correa según tu outfit. Monitorea tu actividad y recibe tus notificaciones sin sacar el celular.",
+    incluye: ["1 smartwatch", "7 correas", "Cargador inalámbrico"]
+  },
+  {
+    slug: "foco-recargable-portatil",
+    dropiId: 6829,
+    nombre: "Foco recargable portátil con gancho",
+    corto: "Luz potente donde la necesites: cortes de luz, camping o el patio.",
+    categoria: "Hogar",
+    destacado: false,
+    precio: 49,
+    precioPack: 85,
+    imagenes: [
+      CDN + "6829/17471112191741974289ac352f7f-1869-4d91-87e6-9a62840906d2.jpg",
+      CDN + "6829/1747111220174197428939225489-86c7-4d7f-9c30-99e7f72a9e32.jpg"
+    ],
+    beneficios: [
+      "Recargable por USB",
+      "Gancho para colgarlo donde quieras",
+      "Luz cálida y uniforme",
+      "Ligero y resistente"
+    ],
+    descripcion: "Tenlo siempre listo para un corte de luz, una noche de camping o para iluminar la cochera. Se carga por USB como tu celular.",
+    incluye: ["1 foco recargable", "Cable USB"]
+  },
+  {
+    slug: "linterna-martillo-4-en-1",
+    dropiId: 8824,
+    nombre: "Linterna martillo de emergencia 4 en 1",
+    corto: "Linterna, rompe vidrios, corta cinturón y power bank en una sola herramienta.",
+    categoria: "Auto",
+    destacado: false,
+    precio: 69,
+    precioPack: 119,
+    imagenes: [
+      CDN + "8824/17805829281%20(9).webp",
+      CDN + "8824/17805829284%20(2).webp",
+      CDN + "8824/17805829292%20(9).webp"
+    ],
+    beneficios: [
+      "Linterna LED con luz lateral",
+      "Martillo rompe vidrios de seguridad",
+      "Cortador de cinturón oculto",
+      "Salida USB para cargar tu celular"
+    ],
+    descripcion: "La herramienta que todo auto debería llevar. Ilumina, te ayuda a salir en una emergencia y hasta carga tu celular.",
+    incluye: ["1 linterna martillo 4 en 1", "Cable de carga"]
+  },
+  {
+    slug: "antena-tv-full-hd",
+    dropiId: 7673,
+    nombre: "Antena TV digital Full HD",
+    corto: "Mira gratis los canales de señal abierta en alta definición.",
+    categoria: "Tech",
+    destacado: false,
+    precio: 59,
+    precioPack: 99,
+    imagenes: [
+      CDN + "7673/1756490717Screenshot%202025-08-29%20at%2013.04.49.png",
+      CDN + "7673/1773678335Screenshot%202026-03-16%20at%2011.24.17.png",
+      CDN + "7673/1773678335Screenshot%202026-03-16%20at%2011.24.34.png"
+    ],
+    beneficios: [
+      "Canales de señal abierta en HD",
+      "Sin pagar mensualidades",
+      "Fácil de instalar",
+      "Cable incluido"
+    ],
+    descripcion: "Conéctala a tu televisor con TDT y disfruta los canales nacionales de señal abierta con imagen nítida. Ideal para la segunda TV de la casa.",
+    incluye: ["1 antena digital", "Cable coaxial"]
+  },
+  {
+    slug: "electroestimulador-tens",
+    dropiId: 9316,
+    nombre: "Electroestimulador TENS con 4 electrodos",
+    corto: "Masaje por impulsos eléctricos para relajar músculos en casa.",
+    categoria: "Bienestar",
+    destacado: false,
+    precio: 119,
+    precioPack: 209,
+    imagenes: [
+      CDN + "9316/img_6a711936328bc3.84271380_0.jpg",
+      CDN + "9316/4d02b76a-81cc-43e9-b8a5-9758a4b8cab5.jpg",
+      CDN + "9316/8e344aa4-9ea6-4e25-816f-66e2646a6660.jpg"
+    ],
+    beneficios: [
+      "Pantalla digital fácil de usar",
+      "Varios modos e intensidades",
+      "4 electrodos para cubrir más zonas",
+      "Compacto y portátil"
+    ],
+    descripcion: "Relaja espalda, cuello, piernas o brazos después de un día pesado. Elige el modo y la intensidad que te resulten más cómodos. No usar con marcapasos ni durante el embarazo.",
+    incluye: ["1 equipo TENS", "4 electrodos", "Cables"]
+  },
+  {
+    slug: "cinta-metrica-digital",
+    dropiId: 571,
+    nombre: "Cinta métrica digital",
+    corto: "Mide distancias, curvas y diámetros rodando sobre la superficie.",
+    categoria: "Herramientas",
+    destacado: false,
+    precio: 129,
+    precioPack: 229,
+    imagenes: [CDN + "571/1698699261CINTA%20METRICA%20DIGITAL.png"],
+    beneficios: [
+      "Pantalla de 1.8\"",
+      "Mide curvas, diámetros y distancias",
+      "Distancia acumulada de hasta 99 m",
+      "Batería de larga duración"
+    ],
+    descripcion: "Más práctica que una wincha: pásala sobre la superficie y lee la medida en la pantalla. Útil para costura, carpintería, decoración y obras.",
+    incluye: ["1 cinta métrica digital"]
+  },
+  {
+    slug: "wincha-laser-2-en-1",
+    dropiId: 3991,
+    nombre: "Wincha con medidor láser 2 en 1",
+    corto: "Láser de hasta 40 m y cinta de 5 m en una sola herramienta.",
+    categoria: "Herramientas",
+    destacado: false,
+    precio: 179,
+    precioPack: 319,
+    imagenes: [CDN + "3991/1722550387WhatsApp%20Image%202024-08-01%20at%205.11.02%20PM.jpeg"],
+    beneficios: [
+      "Medición láser de hasta 40 metros",
+      "Cinta métrica de 5 metros",
+      "Calcula áreas y volúmenes",
+      "Recargable por USB"
+    ],
+    descripcion: "Mide un ambiente completo en segundos, sin ayuda de nadie. Ideal para obras, mudanzas, instalaciones y presupuestos.",
+    incluye: ["1 wincha láser 2 en 1", "Cable USB"]
+  },
+  {
+    slug: "exprimidor-automatico-naranjas",
+    dropiId: 3088,
+    nombre: "Exprimidor automático de cítricos",
+    corto: "Jugo de naranja fresco en segundos, con un solo botón.",
+    categoria: "Hogar",
+    destacado: false,
+    precio: 89,
+    precioPack: 159,
+    imagenes: [
+      CDN + "3088/1769216083full_image-1.jpeg",
+      CDN + "3088/1769216083exprimidor-electrico-portatil-recargable-de-naranja-y-frutas.jpg",
+      CDN + "3088/1711928025Sintitulo_300x300px_af2258ec-1a46-4554-8d36-6cc28d1b2b49_480x480.gif"
+    ],
+    beneficios: [
+      "Exprime de forma automática",
+      "Recargable y portátil",
+      "Fácil de limpiar",
+      "Ideal para naranjas, limones y mandarinas"
+    ],
+    descripcion: "Empieza el día con jugo natural sin esfuerzo. Coloca la fruta, presiona y listo.",
+    incluye: ["1 exprimidor automático", "Cable de carga"]
+  },
+  {
+    slug: "exprimidor-electrico-portatil",
+    dropiId: 9411,
+    nombre: "Exprimidor eléctrico portátil R25",
+    corto: "Inalámbrico y recargable: jugos frescos en casa o en la oficina.",
+    categoria: "Hogar",
+    destacado: false,
+    precio: 99,
+    precioPack: 179,
+    imagenes: [
+      CDN + "9411/img_6a920c08bbe244.70637912_0.jpg",
+      CDN + "9411/58995eb1-7165-4958-adea-2225deba250a.jpg",
+      CDN + "9411/e47b95aa-2cf9-473d-9c67-f51edf408e51.jpg"
+    ],
+    beneficios: [
+      "Funciona sin cable mientras lo usas",
+      "Batería recargable por USB",
+      "Activación con un botón",
+      "Compacto y fácil de guardar"
+    ],
+    descripcion: "Prepara jugos naturales donde quieras. Su diseño portátil lo hace perfecto para la cocina, la oficina o el viaje.",
+    incluye: ["1 exprimidor portátil", "Cable USB"]
+  },
+  {
+    slug: "selladora-al-vacio",
+    dropiId: 6254,
+    nombre: "Selladora al vacío + bolsas",
+    corto: "Conserva tus alimentos frescos por más tiempo.",
+    categoria: "Hogar",
+    destacado: false,
+    precio: 89,
+    precioPack: 159,
+    imagenes: [CDN + "6254/1741298916CV.JPG"],
+    beneficios: [
+      "Retira el aire y sella herméticamente",
+      "Evita la oxidación y el desperdicio",
+      "Ideal para carnes, quesos y verduras",
+      "Incluye bolsas"
+    ],
+    descripcion: "Compra al por mayor y guarda en porciones. Tus alimentos duran más en la refri o el congelador y ahorras dinero.",
+    incluye: ["1 selladora al vacío", "Bolsas para sellar"]
+  },
+  {
+    slug: "balanza-gramera-digital",
+    dropiId: 8809,
+    nombre: "Balanza gramera digital (hasta 10 kg)",
+    corto: "Precisión de 1 g para cocinar, hacer repostería o pesar envíos.",
+    categoria: "Hogar",
+    destacado: false,
+    precio: 69,
+    precioPack: 119,
+    imagenes: [
+      CDN + "8809/17805296311.webp",
+      CDN + "8809/17805296312.webp",
+      CDN + "8809/17805296313.webp"
+    ],
+    beneficios: [
+      "Capacidad máxima de 10 kg",
+      "Precisión de 1 gramo",
+      "Función tara para pesar con recipiente",
+      "Mide en gramos y onzas"
+    ],
+    descripcion: "Sigue tus recetas al pie de la letra, controla porciones o pesa tus paquetes antes de enviarlos.",
+    incluye: ["1 balanza gramera"]
+  },
+  {
+    slug: "escurridor-bowl-3-en-1",
+    dropiId: 9414,
+    nombre: "Set bowl + escurridor + rallador 3 en 1",
+    corto: "Lava, escurre, ralla y mezcla con un solo set.",
+    categoria: "Hogar",
+    destacado: false,
+    precio: 89,
+    precioPack: 159,
+    imagenes: [
+      CDN + "9414/img_6a920c1d19c470.26702272_0.jpg",
+      CDN + "9414/4d536918-2080-42d6-a6ef-bfc576dffbca.jpg",
+      CDN + "9414/0030db66-b0bd-4de1-8fef-1532fb4800b2.jpg"
+    ],
+    beneficios: [
+      "Bowl para mezclar o guardar",
+      "Escurridor para frutas y verduras",
+      "Tapa ralladora y cortadora",
+      "Ahorra espacio en tu cocina"
+    ],
+    descripcion: "Un set práctico para preparar tus comidas en menos tiempo y con menos cosas que lavar.",
+    incluye: ["1 bowl", "1 escurridor", "1 tapa ralladora"]
+  },
+  {
+    slug: "organizador-de-tapas",
+    dropiId: 9415,
+    nombre: "Organizador de tapas plegable",
+    corto: "Tapas ordenadas y a la mano sin ocupar espacio.",
+    categoria: "Hogar",
+    destacado: false,
+    precio: 59,
+    precioPack: 99,
+    imagenes: [
+      CDN + "9415/img_6a920c2046ce83.17222505_0.jpg",
+      CDN + "9415/608a88f0-81eb-4f4f-8f14-34b54cee117f.jpg",
+      CDN + "9415/c469c8d3-c143-4bc5-baa7-2e41b1dd2c50.jpg"
+    ],
+    beneficios: [
+      "Brazos que se pliegan cuando no los usas",
+      "Se instala en la pared o el mueble",
+      "Para tapas de ollas y sartenes",
+      "Libera espacio en tus cajones"
+    ],
+    descripcion: "Dile adiós al cajón desordenado de tapas. Instálalo en la pared o la puerta del mueble y tenlas siempre a la vista.",
+    incluye: ["1 organizador de tapas"]
+  },
+  {
+    slug: "escurridor-platos-85cm",
+    dropiId: 9413,
+    nombre: "Escurridor de platos sobre lavadero (85 cm)",
+    corto: "Organiza platos, tazas y utensilios aprovechando el espacio vertical.",
+    categoria: "Hogar",
+    destacado: false,
+    precio: 149,
+    precioPack: 269,
+    imagenes: [
+      CDN + "9413/b36a4a63-2a6d-4cb0-a686-ff6346e8c816.jpg",
+      CDN + "9413/681e62c1-b788-49ad-97c3-f425a5701bdb.jpg",
+      CDN + "9413/b989463a-5f6c-40f6-9097-6c797131778d.jpg"
+    ],
+    beneficios: [
+      "Se coloca sobre el lavadero",
+      "El agua escurre directo al fregadero",
+      "Espacios para platos, tazas y cubiertos",
+      "Estructura resistente"
+    ],
+    descripcion: "Gana espacio en tu cocina: todo se seca y se ordena sobre el lavadero, sin ocupar el mostrador.",
+    incluye: ["1 escurridor de 85 cm con accesorios"]
+  },
+  {
+    slug: "bolsas-compresion-vacio-x3",
+    dropiId: 3131,
+    nombre: "Bolsas de compresión al vacío (x3)",
+    corto: "Guarda ropa y frazadas ocupando hasta la mitad del espacio.",
+    categoria: "Hogar",
+    destacado: false,
+    precio: 59,
+    precioPack: 99,
+    imagenes: [
+      CDN + "3131/1712275742Screenshot%202024-04-04%20at%2019.08.25.png",
+      CDN + "3131/1770149132Captura%20de%20pantalla%202026-02-03%20150205.png",
+      CDN + "3131/1770149132Captura%20de%20pantalla%202026-02-03%20150121.png"
+    ],
+    beneficios: [
+      "Para ropa, frazadas y edredones",
+      "Protegen de la humedad y el polvo",
+      "Reutilizables",
+      "Pack de 3 bolsas"
+    ],
+    descripcion: "Perfectas para guardar la ropa de temporada o para viajar con más cosas en la maleta.",
+    incluye: ["3 bolsas de compresión al vacío"]
+  },
+  {
+    slug: "pack-bolsas-vacio-compresor",
+    dropiId: 8828,
+    nombre: "Pack 5 bolsas al vacío + mini compresor",
+    corto: "Comprime ropa y textiles en segundos con el mini compresor eléctrico.",
+    categoria: "Hogar",
+    destacado: false,
+    precio: 119,
+    precioPack: 209,
+    imagenes: [
+      CDN + "8828/178058391201.webp",
+      CDN + "8828/178058391203.webp",
+      CDN + "8828/17805839124.webp",
+      CDN + "8828/17805839121%20(1).webp"
+    ],
+    beneficios: [
+      "5 bolsas resistentes",
+      "Mini compresor eléctrico",
+      "Succionador manual de respaldo",
+      "Ideal para clósets y maletas"
+    ],
+    descripcion: "Organiza tu clóset o tu maleta como un profesional. El compresor saca el aire por ti y la ropa ocupa mucho menos.",
+    incluye: ["5 bolsas al vacío", "1 mini compresor", "1 succionador manual"]
+  },
+  {
+    slug: "sujetador-de-sabanas-x4",
+    dropiId: 9409,
+    nombre: "Sujetadores de sábanas (pack x4)",
+    corto: "Sábanas siempre estiradas: se acabaron las esquinas que se salen.",
+    categoria: "Hogar",
+    destacado: false,
+    precio: 79,
+    precioPack: 139,
+    imagenes: [
+      CDN + "9409/img_6a920ad6bce735.28408576_0.png",
+      CDN + "9409/b646ba86-4f79-47f0-bfc3-ede59ed6cbb8.jpg",
+      CDN + "9409/cb84691b-2a37-4c75-aa6e-5827cb9df3b2.jpg"
+    ],
+    beneficios: [
+      "Mantienen la sábana firme y lisa",
+      "Fáciles de colocar",
+      "Para cualquier tamaño de colchón",
+      "Pack de 4"
+    ],
+    descripcion: "Tu cama se ve bien tendida toda la noche. Ideal para colchones gruesos y para quienes se mueven mucho al dormir.",
+    incluye: ["4 sujetadores de sábanas"]
+  },
+  {
+    slug: "mini-calefactor-volcan",
+    dropiId: 7583,
+    nombre: "Mini calefactor eléctrico con control remoto",
+    corto: "Calor rápido para tu dormitorio, oficina o estudio.",
+    categoria: "Hogar",
+    destacado: false,
+    precio: 99,
+    precioPack: 179,
+    imagenes: [
+      CDN + "7583/1754336110O1CN015eakln1qYFuxfJfIN_!!3267585507-0-cib.jpg",
+      CDN + "7583/1754336111O1CN01RaQeuj1qYFuujZ9QB_!!3267585507-0-cib.jpg",
+      CDN + "7583/1754336111O1CN01twogeB1qYFuxfSBxb_!!3267585507-0-cib.jpg"
+    ],
+    beneficios: [
+      "Control remoto con alcance de 5 m",
+      "Calienta ambientes pequeños rápidamente",
+      "Diseño compacto con efecto llama",
+      "Fácil de mover"
+    ],
+    descripcion: "Abrígate en las noches frías sin calentar toda la casa. Ponlo junto a tu escritorio o cama y regúlalo desde el control.",
+    incluye: ["1 mini calefactor", "Control remoto"]
+  },
+  {
+    slug: "humidificador-volcan",
+    dropiId: 6516,
+    nombre: "Humidificador volcán con luz",
+    corto: "Vapor frío y efecto volcán que relaja y decora.",
+    categoria: "Hogar",
+    destacado: false,
+    precio: 79,
+    precioPack: 139,
+    imagenes: [CDN + "6516/1744049523WhatsApp%20Image%202025-04-07%20at%201.11.36%20PM.jpeg"],
+    beneficios: [
+      "Tecnología ultrasónica de vapor frío",
+      "Efecto volcán con luz",
+      "Silencioso para dormir",
+      "Ideal para dormitorio o escritorio"
+    ],
+    descripcion: "Ayuda a mantener la humedad del ambiente mientras decora tu espacio con su efecto de volcán iluminado.",
+    incluye: ["1 humidificador", "Cable USB"]
+  },
+  {
+    slug: "termo-set-500ml-3-tazas",
+    dropiId: 9310,
+    nombre: "Set termo 500 ml + 3 tazas",
+    corto: "Bebidas calientes o frías por horas, en caja de regalo.",
+    categoria: "Hogar",
+    destacado: false,
+    precio: 59,
+    precioPack: 99,
+    imagenes: [
+      CDN + "9310/17852598991000725004.jpg",
+      CDN + "9310/17852598991000725003.jpg",
+      CDN + "9310/17852598991000725005.jpg"
+    ],
+    beneficios: [
+      "Acero inoxidable resistente",
+      "Mantiene la temperatura por horas",
+      "Incluye 3 tazas",
+      "Presentación de regalo"
+    ],
+    descripcion: "Llévate el café, el té o el agua fría a donde vayas y compártelo. Un regalo práctico que siempre queda bien.",
+    incluye: ["1 termo de 500 ml", "3 tazas", "Caja de regalo"]
+  },
+  {
+    slug: "lonchera-termica",
+    dropiId: 6198,
+    nombre: "Lonchera térmica",
+    corto: "Tu almuerzo a la temperatura ideal en el trabajo o el colegio.",
+    categoria: "Hogar",
+    destacado: false,
+    precio: 79,
+    precioPack: 139,
+    imagenes: [
+      CDN + "6198/17403219361.jpg",
+      CDN + "6198/17403219362.jpg",
+      CDN + "6198/17403219363.jpg",
+      CDN + "6198/17403219364.jpg"
+    ],
+    beneficios: [
+      "Interior térmico",
+      "Tela resistente y fácil de limpiar",
+      "Asa cómoda",
+      "Varios colores según stock"
+    ],
+    descripcion: "Lleva tu comida casera y ahorra. Mantiene la temperatura de tus táperes hasta la hora del almuerzo.",
+    incluye: ["1 lonchera térmica"]
+  },
+  {
+    slug: "secador-de-ropa-portatil",
+    dropiId: 9131,
+    nombre: "Secador de ropa portátil 600 W",
+    corto: "Seca tu ropa con aire caliente aunque no haya sol.",
+    categoria: "Hogar",
+    destacado: false,
+    precio: 109,
+    precioPack: 189,
+    imagenes: [
+      CDN + "9131/1782315307WhatsApp%20Image%202026-06-24%20at%2010.31.54%20AM.jpeg",
+      CDN + "9131/1782315306WhatsApp%20Image%202026-06-24%20at%2010.32.18%20AM.jpeg",
+      CDN + "9131/1782315307WhatsApp%20Image%202026-06-24%20at%2010.31.37%20AM.jpeg"
+    ],
+    beneficios: [
+      "Potencia de 600 W",
+      "Plegable y ligero",
+      "Ideal para departamentos y días húmedos",
+      "Fácil de guardar"
+    ],
+    descripcion: "Perfecto para el invierno limeño: cuelga la ropa en su funda, enciéndelo y deja que el aire caliente haga el trabajo.",
+    incluye: ["1 secador de ropa portátil"]
+  },
+  {
+    slug: "almohada-ortopedica-cervical",
+    dropiId: 9326,
+    nombre: "Almohada ortopédica cervical",
+    corto: "Memory foam que se adapta a tu cuello para descansar mejor.",
+    categoria: "Bienestar",
+    destacado: false,
+    precio: 89,
+    precioPack: 159,
+    imagenes: [
+      CDN + "9326/75df5fe8-7246-43d8-a7dc-63bbfeacc529.PNG",
+      CDN + "9326/00201c34-4888-4160-90c4-c195ac09f718.PNG",
+      CDN + "9326/b3c7c9dd-d153-42a2-a7cd-d82ae6cb6d75.PNG"
+    ],
+    beneficios: [
+      "Espuma viscoelástica de alta densidad",
+      "Ayuda a mantener una postura cómoda",
+      "No se deforma",
+      "No guarda calor"
+    ],
+    descripcion: "Despierta más descansado. Su forma ergonómica acompaña la curva natural de tu cuello mientras duermes.",
+    incluye: ["1 almohada ortopédica"]
+  },
+  {
+    slug: "juego-de-dados-46",
+    dropiId: 8745,
+    nombre: "Juego de dados de 46 piezas",
+    corto: "Ajusta y desajusta tuercas y pernos en el auto o la casa.",
+    categoria: "Herramientas",
+    destacado: false,
+    precio: 89,
+    precioPack: 159,
+    imagenes: [CDN + "8745/img_6a12235d4e2399.26473444_0.png"],
+    beneficios: [
+      "46 piezas en estuche",
+      "Para mecánica y uso doméstico",
+      "Estuche organizador",
+      "Acero resistente"
+    ],
+    descripcion: "Todo lo necesario para mantenimiento del auto, la moto o la casa, en un estuche fácil de llevar.",
+    incluye: ["Juego de dados de 46 piezas con estuche"]
+  },
+  {
+    slug: "wincha-nivelador-laser",
+    dropiId: 8752,
+    nombre: "Wincha con nivelador láser",
+    corto: "Mide y alinea con precisión para colgar cuadros, repisas o hacer obras.",
+    categoria: "Herramientas",
+    destacado: false,
+    precio: 89,
+    precioPack: 159,
+    imagenes: [CDN + "8752/img_6a1223733018e3.35888277_0.png"],
+    beneficios: [
+      "Línea láser para nivelar",
+      "Wincha integrada",
+      "Ideal para instalación y bricolaje",
+      "Compacta"
+    ],
+    descripcion: "Cuelga cuadros derechitos a la primera. Mide y nivela con una sola herramienta.",
+    incluye: ["1 wincha con nivelador láser"]
+  },
+  {
+    slug: "kit-elevador-de-muebles",
+    dropiId: 8821,
+    nombre: "Kit elevador y deslizador de muebles (5 piezas)",
+    corto: "Mueve camas, sofás y roperos sin esfuerzo y sin rayar el piso.",
+    categoria: "Herramientas",
+    destacado: false,
+    precio: 79,
+    precioPack: 139,
+    imagenes: [
+      CDN + "8821/17805824401%20(6).webp",
+      CDN + "8821/17805824402%20(6).webp",
+      CDN + "8821/17805824403%20(5).webp"
+    ],
+    beneficios: [
+      "Soporta hasta 150 kg",
+      "Ruedas deslizantes",
+      "Funciona en madera, laminado y alfombra",
+      "Ideal para mudanzas y limpieza"
+    ],
+    descripcion: "Levanta el mueble con la palanca, coloca las ruedas y deslízalo. Así de fácil para limpiar debajo o redecorar.",
+    incluye: ["1 palanca elevadora", "4 deslizadores con ruedas"]
+  },
+  {
+    slug: "afilador-de-brocas",
+    dropiId: 8808,
+    nombre: "Afilador de brocas",
+    corto: "Recupera el filo de tus brocas en segundos.",
+    categoria: "Herramientas",
+    destacado: false,
+    precio: 89,
+    precioPack: 159,
+    imagenes: [
+      CDN + "8808/17805293781%20(1).webp",
+      CDN + "8808/17805293782%20(1).webp",
+      CDN + "8808/17805293783%20(2).webp"
+    ],
+    beneficios: [
+      "Restaura el filo rápido y con precisión",
+      "Para varios tamaños de broca",
+      "Diseño robusto",
+      "Fácil de usar con tu taladro"
+    ],
+    descripcion: "No vuelvas a botar brocas sin filo. Colócala en la ranura, afila y sigue trabajando.",
+    incluye: ["1 afilador de brocas"]
+  },
+  {
+    slug: "llave-multifuncional-sanitarios",
+    dropiId: 4243,
+    nombre: "Llave multifuncional para sanitarios",
+    corto: "Instala y repara grifos y tuercas en espacios reducidos.",
+    categoria: "Herramientas",
+    destacado: false,
+    precio: 69,
+    precioPack: 119,
+    imagenes: [
+      CDN + "4243/1725562365WhatsApp%20Image%202024-09-05%20at%2011.24.06%20AM%20(1)%20(1).jpeg",
+      CDN + "4243/1725562365WhatsApp%20Image%202024-09-05%20at%2011.23.59%20AM%20(2)%20(1).jpeg",
+      CDN + "4243/1725562365WhatsApp%20Image%202024-09-05%20at%2011.24.06%20AM%20(2).jpeg",
+      CDN + "4243/1725562365WhatsApp%20Image%202024-09-05%20at%2011.23.59%20AM%20(3)%20(1).jpeg"
+    ],
+    beneficios: [
+      "Ideal para grifería y tuberías",
+      "No daña acabados cromados",
+      "Mango corto y ergonómico",
+      "Juego con varios tamaños"
+    ],
+    descripcion: "La herramienta que te faltaba para cambiar ese caño sin llamar al gasfitero.",
+    incluye: ["1 llave multifuncional con accesorios"]
+  },
+  {
+    slug: "set-brocas-extractoras",
+    dropiId: 3457,
+    nombre: "Set de brocas extractoras de tornillos",
+    corto: "Saca tornillos y pernos dañados o barridos.",
+    categoria: "Herramientas",
+    destacado: false,
+    precio: 59,
+    precioPack: 99,
+    imagenes: [
+      CDN + "3457/171518124213.jpg",
+      CDN + "3457/171518124311.jpg",
+      CDN + "3457/17151812435.jpg"
+    ],
+    beneficios: [
+      "Para tornillos barridos o atascados",
+      "Varios tamaños",
+      "Acero resistente",
+      "Estuche incluido"
+    ],
+    descripcion: "Ese tornillo que nadie podía sacar, sale en minutos. Úsalo con tu taladro en reversa.",
+    incluye: ["Set de brocas extractoras con estuche"]
+  },
+  {
+    slug: "extension-flexible-taladro",
+    dropiId: 1098,
+    nombre: "Extensión flexible para taladro",
+    corto: "Atornilla en rincones donde el taladro no entra.",
+    categoria: "Herramientas",
+    destacado: false,
+    precio: 49,
+    precioPack: 85,
+    imagenes: [
+      CDN + "1098/1702520171315863928_4094596937330901_3950308575772211092_n.jpg",
+      CDN + "1098/1770325503272894945_4531945766915688_1513383149335792370_n.jpg",
+      CDN + "1098/1770325503310133151_6194978327196946_4853857066666124678_n.jpg"
+    ],
+    beneficios: [
+      "Eje flexible de acero cromo-vanadio",
+      "Llega a espacios difíciles",
+      "Compatible con la mayoría de taladros",
+      "Incluye puntas"
+    ],
+    descripcion: "Perfecta para muebles, autos y lugares estrechos. Conéctala a tu taladro y dobla el eje hacia donde necesites.",
+    incluye: ["1 extensión flexible", "Puntas de destornillador"]
+  },
+  {
+    slug: "tijera-para-injertos",
+    dropiId: 9417,
+    nombre: "Tijera profesional para injertos",
+    corto: "Cortes precisos en V, U y Omega para tus plantas.",
+    categoria: "Herramientas",
+    destacado: false,
+    precio: 99,
+    precioPack: 179,
+    imagenes: [
+      CDN + "9417/img_6a920c2724c1e1.76426261_0.png",
+      CDN + "9417/eb917e8f-498b-4c44-a25a-0d4a8e4733ea.jpg",
+      CDN + "9417/3315e9d2-4c70-4e80-add0-48806e029eae.jpg"
+    ],
+    beneficios: [
+      "Cuchillas intercambiables",
+      "Cortes en V, U y Omega",
+      "Une patrón e injerto con precisión",
+      "Para jardín y vivero"
+    ],
+    descripcion: "La herramienta preferida para injertar frutales y plantas ornamentales con cortes limpios y exactos.",
+    incluye: ["1 tijera para injertos", "Cuchillas adicionales"]
+  },
+  {
+    slug: "rodillera-termica-gel",
+    dropiId: 8830,
+    nombre: "Rodillera de compresión con gel frío/calor",
+    corto: "Soporte y alivio localizado para tu rodilla.",
+    categoria: "Bienestar",
+    destacado: false,
+    precio: 79,
+    precioPack: 139,
+    imagenes: [
+      CDN + "8830/17805843961%20(3).webp",
+      CDN + "8830/17805843963%20(3).webp",
+      CDN + "8830/17805843962%20(3).webp"
+    ],
+    beneficios: [
+      "Gel para terapia de frío o calor",
+      "Compresión de 360°",
+      "Ajustable y cómoda",
+      "Para deporte o recuperación"
+    ],
+    descripcion: "Enfríala o caliéntala según lo que necesites y colócala sobre la rodilla para sentir alivio después del deporte o un día largo.",
+    incluye: ["1 rodillera con gel"]
+  },
+  {
+    slug: "ejercitador-pedal-elastico",
+    dropiId: 8233,
+    nombre: "Ejercitador de pedal con bandas elásticas",
+    corto: "Entrena brazos, abdomen, piernas y glúteos en casa.",
+    categoria: "Bienestar",
+    destacado: false,
+    precio: 69,
+    precioPack: 119,
+    imagenes: [
+      CDN + "8233/1773104394images.jpeg",
+      CDN + "8233/1773104395imageUrl_2.webp",
+      CDN + "8233/1773104858WhatsApp%20Image%202026-03-09%20at%208.05.49%20PM.jpeg"
+    ],
+    beneficios: [
+      "Bandas de resistencia",
+      "Pedales antideslizantes",
+      "Ligero y fácil de guardar",
+      "Para todos los niveles"
+    ],
+    descripcion: "Un gimnasio de bolsillo: úsalo en tu sala, en el parque o de viaje para mantenerte activo.",
+    incluye: ["1 ejercitador de pedal"]
+  },
+  {
+    slug: "molde-hielo-facial",
+    dropiId: 8113,
+    nombre: "Molde de hielo facial",
+    corto: "Un masaje de frío que desinflama y refresca tu rostro en minutos.",
+    categoria: "Belleza",
+    destacado: false,
+    precio: 49,
+    precioPack: 85,
+    imagenes: [
+      CDN + "8113/1769530760ICEGLOW%20(4).jpg",
+      CDN + "8113/1769530760ICEGLOW.jpg",
+      CDN + "8113/1769530760ICEGLOW%20(5).jpg",
+      CDN + "8113/1769530760ICEGLOW%20(10).jpg"
+    ],
+    beneficios: [
+      "Ayuda a desinflamar ojeras y rostro",
+      "Refresca y revitaliza la piel",
+      "Reutilizable",
+      "Fácil de usar"
+    ],
+    descripcion: "Llénalo de agua, congélalo y deslízalo por tu rostro por las mañanas. Un ritual de belleza rápido y económico.",
+    incluye: ["1 molde de hielo facial"]
+  },
+  {
+    slug: "delineador-con-sello",
+    dropiId: 8256,
+    nombre: "Delineador con sello 3 en 1",
+    corto: "Delineado de gato perfecto y simétrico en segundos.",
+    categoria: "Belleza",
+    destacado: false,
+    precio: 69,
+    precioPack: 119,
+    imagenes: [
+      CDN + "8256/1775491794WhatsApp%20Image%202026-04-06%20at%2010.38.29%20AM.jpeg",
+      CDN + "8256/1775491794WhatsApp%20Image%202026-04-06%20at%2010.39.33%20AM.jpeg",
+      CDN + "8256/1775491797WhatsApp%20Image%202026-04-06%20at%2010.38.47%20AM.jpeg"
+    ],
+    beneficios: [
+      "Sello para la punta del delineado",
+      "Delineador líquido de precisión",
+      "Resultado simétrico en ambos ojos",
+      "Fácil incluso para principiantes"
+    ],
+    descripcion: "Presiona el sello en la esquina del ojo y une con el delineador. Así de fácil logras un delineado profesional.",
+    incluye: ["1 delineador con sello"]
+  },
+  {
+    slug: "lapiz-blanqueador-dental",
+    dropiId: 4786,
+    nombre: "Lápiz blanqueador de dientes",
+    corto: "Ayuda a reducir manchas de forma gradual. Llévalo a donde vayas.",
+    categoria: "Belleza",
+    destacado: false,
+    precio: 59,
+    precioPack: 99,
+    imagenes: [
+      CDN + "4786/1732893516WhatsApp%20Image%202024-11-29%20at%2010.03.10%20AM.jpeg",
+      CDN + "4786/1732893516WhatsApp%20Image%202024-11-29%20at%209.52.05%20AM.jpeg",
+      CDN + "4786/1732893516WhatsApp%20Image%202024-11-29%20at%209.50.50%20AM.jpeg"
+    ],
+    beneficios: [
+      "Aplicación fácil tipo lápiz",
+      "Ayuda a aclarar manchas superficiales",
+      "Portátil",
+      "Uso diario"
+    ],
+    descripcion: "Aplica sobre los dientes limpios y secos según las indicaciones del empaque. Los resultados varían según cada persona.",
+    incluye: ["1 lápiz blanqueador"]
+  },
+  {
+    slug: "cintas-blanqueadoras-7d",
+    dropiId: 8372,
+    nombre: "Cintas blanqueadoras dentales 7D White",
+    corto: "Mejora la apariencia de tu sonrisa desde casa.",
+    categoria: "Belleza",
+    destacado: false,
+    precio: 79,
+    precioPack: 139,
+    imagenes: [
+      CDN + "8372/1776709640WhatsApp%20Image%202026-04-20%20at%2012.39.51%20PM.jpeg",
+      CDN + "8372/1776709640WhatsApp%20Image%202026-04-20%20at%201.25.23%20PM.jpeg",
+      CDN + "8372/1776709640WhatsApp%20Image%202026-04-20%20at%2012.46.31%20PM.jpeg"
+    ],
+    beneficios: [
+      "Se adhieren fácilmente",
+      "Ayudan a reducir manchas superficiales",
+      "Uso práctico en casa",
+      "Tratamiento por días"
+    ],
+    descripcion: "Colócalas sobre tus dientes el tiempo indicado en el empaque y retíralas. Los resultados varían según cada persona y la constancia.",
+    incluye: ["1 caja de cintas blanqueadoras"]
+  },
+  {
+    slug: "cera-en-barra-cabello",
+    dropiId: 8810,
+    nombre: "Cera en barra para cabello IKT (75 g)",
+    corto: "Controla el frizz y fija peinados al instante.",
+    categoria: "Belleza",
+    destacado: false,
+    precio: 69,
+    precioPack: 119,
+    imagenes: [
+      CDN + "8810/17805798161%20(1).webp",
+      CDN + "8810/17805798164.webp",
+      CDN + "8810/17805798162%20(1).webp",
+      CDN + "8810/17805798173%20(1).webp"
+    ],
+    beneficios: [
+      "Controla el frizz y los pelitos sueltos",
+      "Con cera de abejas, glicerina y aguacate",
+      "Aroma ligero",
+      "Formato barra fácil de aplicar"
+    ],
+    descripcion: "Desliza la barra sobre el cabello para un peinado pulido, ideal para moños, colas y peinados de hombre.",
+    incluye: ["1 cera en barra de 75 g"]
+  },
+  {
+    slug: "tren-domino-musical",
+    dropiId: 8835,
+    nombre: "Tren dominó musical automático",
+    corto: "Coloca las fichas solo mientras avanza, con luces y sonidos.",
+    categoria: "Juegos",
+    destacado: false,
+    precio: 109,
+    precioPack: 189,
+    imagenes: [
+      CDN + "8835/17805872411%20(1).webp",
+      CDN + "8835/17805872412%20(1).webp",
+      CDN + "8835/17805872423%20(1).webp"
+    ],
+    beneficios: [
+      "Coloca fichas de dominó automáticamente",
+      "Luces y sonidos",
+      "Estimula la creatividad",
+      "Diversión para toda la familia"
+    ],
+    descripcion: "Tus hijos arman recorridos y ven caer las fichas en cadena. Un juguete que engancha a grandes y chicos.",
+    incluye: ["1 tren dominó", "Fichas de dominó"]
+  },
+  {
+    slug: "teclado-infantil-cocodrilo",
+    dropiId: 9416,
+    nombre: "Teclado musical infantil Cocodrilo (37 teclas)",
+    corto: "Su primer piano: teclas, melodías y sonidos divertidos.",
+    categoria: "Juegos",
+    destacado: false,
+    precio: 129,
+    precioPack: 229,
+    imagenes: [
+      CDN + "9416/a1fba707-4922-4467-b482-42cdb0b36ac8.jpg",
+      CDN + "9416/d048bc13-0934-4336-b4cf-2e1a7942b0e8.jpg",
+      CDN + "9416/54997a25-4b52-42f5-8f28-402887e30a0d.jpg",
+      CDN + "9416/47e78219-f5e9-496a-a442-a44d59814231.jpg"
+    ],
+    beneficios: [
+      "37 teclas tipo piano",
+      "Melodías y sonidos incorporados",
+      "Diseño divertido de cocodrilo",
+      "Estimula el interés por la música"
+    ],
+    descripcion: "Un regalo que despierta la curiosidad musical de los más pequeños mientras juegan.",
+    incluye: ["1 teclado infantil"]
+  },
+  {
+    slug: "guitar-master-pro",
+    dropiId: 4697,
+    nombre: "Entrenador de acordes Guitar Master Pro",
+    corto: "Aprende acordes de guitarra desde cero, en cualquier lugar.",
+    categoria: "Juegos",
+    destacado: false,
+    precio: 79,
+    precioPack: 139,
+    imagenes: [
+      CDN + "4697/1732115680Screenshot%202024-11-20%20at%2010.12.01.png",
+      CDN + "4697/1732115680Screenshot%202024-11-20%20at%2010.12.58.png",
+      CDN + "4697/1732115680Screenshot%202024-11-20%20at%2010.12.23.png",
+      CDN + "4697/1732115680Screenshot%202024-11-20%20at%2010.13.11.png"
+    ],
+    beneficios: [
+      "Ideal para principiantes",
+      "Practica acordes y digitación",
+      "Portátil",
+      "Ayuda a avanzar más rápido"
+    ],
+    descripcion: "Practica los acordes mientras ves TV o en el transporte y llega a tu guitarra con los dedos listos.",
+    incluye: ["1 entrenador de acordes"]
+  },
+  {
+    slug: "pop-it-infla-globos",
+    dropiId: 4574,
+    nombre: "Pop It electrónico infla globos",
+    corto: "200 niveles: si fallas, el globo se infla hasta reventar.",
+    categoria: "Juegos",
+    destacado: false,
+    precio: 89,
+    precioPack: 159,
+    imagenes: [
+      CDN + "4574/1731110398POP%20ITTTT.jpg",
+      CDN + "4574/173111055971u1hCMQZCL._AC_SX522_.jpg",
+      CDN + "4574/1731111877S22cb7511cc024139a825da546c8b73a6n.avif"
+    ],
+    beneficios: [
+      "200 niveles de juego",
+      "Música y sonidos",
+      "Globo que se infla con cada error",
+      "Para jugar en familia"
+    ],
+    descripcion: "El juego sensorial que hace reír a todos. Presiona los botones correctos o prepárate para el ¡pum!",
+    incluye: ["1 juego Pop It infla globos"]
+  },
+  {
+    slug: "libro-montessori-4-en-1",
+    dropiId: 9432,
+    nombre: "Libros Montessori mágicos 4 en 1",
+    corto: "Practica letras, números y trazos con tinta que desaparece.",
+    categoria: "Juegos",
+    destacado: false,
+    precio: 79,
+    precioPack: 139,
+    imagenes: [
+      CDN + "9432/3765b4be-0ebb-441f-9067-c9a33da22ec4.jpg",
+      CDN + "9432/2bb11070-1b22-45ca-b0ef-24e433b06cb9.jpg",
+      CDN + "9432/6eb2c3b1-1b7b-4d5d-a41a-28a016d2e514.jpg"
+    ],
+    beneficios: [
+      "4 cuadernos educativos",
+      "Escritura, números y dibujo",
+      "Reutilizables",
+      "Desarrolla la motricidad fina"
+    ],
+    descripcion: "Los niños practican una y otra vez: la tinta se borra sola y el cuaderno queda listo para volver a empezar.",
+    incluye: ["4 cuadernos", "Lapicero", "Repuestos de tinta"]
+  },
+  {
+    slug: "rainbow-scratchbook",
+    dropiId: 4557,
+    nombre: "Libro de arte para raspar Rainbow",
+    corto: "Raspa y descubre colores arcoíris en cada página.",
+    categoria: "Juegos",
+    destacado: false,
+    precio: 79,
+    precioPack: 139,
+    imagenes: [
+      CDN + "4557/1731033190817e07d9-ccc7-44e5-a917-8ed911a762e3.jpeg",
+      CDN + "4557/1731033190Juego-de-papel-arco-ris-m-gico-para-raspar-para-ni-os-pintura-de-raspado-juguetes.jpg_.webp",
+      CDN + "4557/17310331914ff194b2-1ab2-4bc7-b691-11e3e12076f6.jpeg"
+    ],
+    beneficios: [
+      "Páginas negras con colores ocultos",
+      "Incluye lápiz de madera",
+      "Estimula la creatividad",
+      "Sin desorden ni pintura"
+    ],
+    descripcion: "Una actividad creativa y tranquila para los niños, perfecta para viajes o tardes en casa.",
+    incluye: ["1 libro de arte para raspar", "Lápiz de madera"]
+  },
+  {
+    slug: "cubo-megaminx",
+    dropiId: 2993,
+    nombre: "Cubo mágico Megaminx",
+    corto: "El reto de 12 caras para los fanáticos de los cubos.",
+    categoria: "Juegos",
+    destacado: false,
+    precio: 49,
+    precioPack: 85,
+    imagenes: [CDN + "2993/1711156524M3.png"],
+    beneficios: [
+      "12 caras de colores",
+      "Giro suave",
+      "Incluye tutorial",
+      "Ejercita la mente"
+    ],
+    descripcion: "Si ya dominas el cubo clásico, este es tu próximo desafío.",
+    incluye: ["1 cubo Megaminx"]
+  },
+  {
+    slug: "candado-con-alarma",
+    dropiId: 9315,
+    nombre: "Candado con alarma de 110 dB",
+    corto: "Protege tu moto, bicicleta o portón con una alarma potente.",
+    categoria: "Auto",
+    destacado: false,
+    precio: 79,
+    precioPack: 139,
+    imagenes: [
+      CDN + "9315/img_6a71193361b888.50714397_0.jpg",
+      CDN + "9315/7576a626-86a4-4578-9c32-a7f3e6cec352.jpg",
+      CDN + "9315/d324bd3d-c4d5-4898-a11f-43bed5fd2b77.jpg"
+    ],
+    beneficios: [
+      "Alarma de aproximadamente 110 dB",
+      "Para motos, bicis, portones y cajas",
+      "Acero resistente",
+      "Incluye llaves"
+    ],
+    descripcion: "Si alguien intenta forzarlo, la alarma suena fuerte y espanta al ladrón. Tranquilidad para lo que más cuidas.",
+    incluye: ["1 candado con alarma", "Llaves"]
+  },
+  {
+    slug: "inflador-electrico-globos",
+    dropiId: 2708,
+    nombre: "Inflador eléctrico de globos",
+    corto: "Infla decenas de globos en minutos para tus fiestas.",
+    categoria: "Hogar",
+    destacado: false,
+    precio: 79,
+    precioPack: 139,
+    imagenes: [CDN + "2708/1710314781IMG-20220122-WA0024.jpg"],
+    beneficios: [
+      "Infla globos en segundos",
+      "Dos boquillas",
+      "Ideal para decoraciones",
+      "Ahorra tiempo y aire"
+    ],
+    descripcion: "Decora cumpleaños y eventos sin cansarte. Coloca el globo en la boquilla y listo.",
+    incluye: ["1 inflador eléctrico"]
+  },
+  {
+    slug: "lentes-vision-hd-dia-noche",
+    dropiId: 8823,
+    nombre: "Lentes visión HD día y noche (2 pares)",
+    corto: "Un par para el sol y otro para manejar de noche con menos deslumbramiento.",
+    categoria: "Auto",
+    destacado: false,
+    precio: 59,
+    precioPack: 99,
+    imagenes: [
+      CDN + "8823/17805827401%20(8).webp",
+      CDN + "8823/17805827402%20(8).webp",
+      CDN + "8823/17805827403%20(7).webp"
+    ],
+    beneficios: [
+      "Par oscuro para el día",
+      "Par amarillo para la noche",
+      "Reducen el deslumbramiento",
+      "Se colocan sobre tus lentes de medida"
+    ],
+    descripcion: "Maneja más cómodo de día y de noche. Los amarillos ayudan a reducir el reflejo de las luces de otros autos.",
+    incluye: ["2 pares de lentes"]
   },
   /* ---------- CATÁLOGO INICIAL ---------- */
   {
