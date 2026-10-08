@@ -105,11 +105,13 @@
   }
 
   /* ---------- componentes ---------- */
+  const ahorro = p => Math.max(0, 2 * p.precio - p.precioPack);
   const card = p => `
     <article class="card reveal">
       <a href="#/p/${p.slug}" class="img" aria-label="${esc(p.nombre)}">
         <img src="${esc(p.imagenes[0])}" alt="${esc(p.nombre)}" loading="lazy">
-        ${p.destacado ? '<span class="badge">Destacado</span>' : ""}
+        ${p.top ? `<span class="badge badge-fire">🔥 Top ${p.top}</span>` : p.destacado ? '<span class="badge">Destacado</span>' : ""}
+        ${ahorro(p) ? `<span class="save-chip">Pack x2 −${money(ahorro(p))}</span>` : ""}
       </a>
       <div class="body">
         <span class="cat">${esc(p.categoria)}</span>
@@ -119,6 +121,40 @@
         <button class="btn btn-ghost add" data-add="${p.slug}">Agregar al carrito</button>
       </div>
     </article>`;
+
+  const topFive = () => {
+    const tops = P.filter(p => p.top).sort((x, y) => x.top - y.top).slice(0, 5);
+    if (!tops.length) return "";
+    return `
+      <section class="section top5" id="top5">
+        <div class="wrap">
+          <div class="section-head"><div><span class="eyebrow">🔥 Lo más hot</span><h2>Top 5 <span class="grad-text">VISUAL</span></h2></div><p class="muted">Nuestros favoritos del momento. Pídelos hoy y paga recién cuando te llegan.</p></div>
+          <ol class="top-list">${tops.map(p => `
+            <li class="top-item reveal">
+              <span class="rank" aria-label="Puesto ${p.top}">#${p.top}</span>
+              <a class="top-img" href="#/p/${p.slug}"><img src="${esc(p.imagenes[0])}" alt="${esc(p.nombre)}" loading="lazy"></a>
+              <div class="top-body">
+                <div class="top-tags"><span class="tag-hot">🔥 Top ${p.top}</span>${ahorro(p) ? `<span class="tag-sale">OFERTA pack x2 · ahorras ${money(ahorro(p))}</span>` : ""}<span class="tag-ship">Envío gratis</span></div>
+                <h3><a href="#/p/${p.slug}">${esc(p.nombre)}</a></h3>
+                <p class="muted">${esc(p.corto)}</p>
+                <div class="top-price"><b>${money(p.precio)}</b><span>o 2 por ${money(p.precioPack)}</span></div>
+                <div class="top-ctas">
+                  <a class="btn btn-gold btn-pulse" href="#/p/${p.slug}">¡Lo quiero! · Pago al recibir</a>
+                  <button class="btn btn-ghost" data-add="${p.slug}">Agregar al carrito</button>
+                </div>
+              </div>
+            </li>`).join("")}
+          </ol>
+        </div>
+      </section>`;
+  };
+
+  const promoBand = () => {
+    const max = Math.max(...P.map(ahorro));
+    const items = ["🔥 SALE: packs x2 con descuento", `Ahorra hasta ${money(max)} llevando 2`, "🚚 Envío gratis", "💵 Pagas al recibir", "🛡️ Garantía de " + C.garantiaDias + " días"];
+    const row = items.map(t => `<span>${esc(t)}</span>`).join('<i aria-hidden="true">✦</i>');
+    return `<div class="promo-band" role="note"><div class="promo-track">${row}<i aria-hidden="true">✦</i>${row}<i aria-hidden="true">✦</i></div></div>`;
+  };
 
   const trustBar = () => `
     <div class="trust">
@@ -148,7 +184,7 @@
   /* ---------- vistas ---------- */
   function viewHome() {
     setTitle();
-    const hero = P.find(p => p.destacado) || P[0];
+    const hero = P.find(p => p.top === 1) || P.find(p => p.destacado) || P[0];
     const featured = P.filter(p => p.destacado);
     main.innerHTML = `
       <section class="hero">
@@ -158,18 +194,21 @@
             <h1>Gadgets que <span class="grad-text">entran por los ojos</span> y te hacen la vida más fácil.</h1>
             <p class="lead">Tecnología, belleza, auto y mascotas: productos seleccionados para ti. Pides en un minuto, te llega rápido y pagas recién al recibir.</p>
             <div class="hero-ctas">
-              <a class="btn btn-gold" href="#/catalogo">Ver productos</a>
-              <a class="btn btn-ghost" href="#/como-comprar">¿Cómo compro?</a>
+              <button class="btn btn-gold btn-pulse" type="button" data-scroll="top5">🔥 Ver el Top 5</button>
+              <a class="btn btn-ghost" href="#/catalogo">Ver todo el catálogo</a>
             </div>
           </div>
           <a class="hero-card reveal" href="#/p/${hero.slug}">
-            <span class="tag">Destacado</span>
+            <span class="tag">${hero.top ? "🔥 #1 del Top 5" : "Destacado"}</span>
             <div class="img"><img src="${esc(hero.imagenes[0])}" alt="${esc(hero.nombre)}"></div>
             <div class="row"><h3>${esc(hero.nombre)}</h3><b class="gold">${money(hero.precio)}</b></div>
+            <span class="hero-buy">Comprar ahora →</span>
           </a>
         </div>
       </section>
+      ${promoBand()}
       <div class="wrap">${trustBar()}</div>
+      ${topFive()}
       <section class="section">
         <div class="wrap">
           <div class="section-head"><div><span class="eyebrow">Favoritos</span><h2>Destacados</h2></div><a class="btn btn-ghost" href="#/catalogo">Ver todo el catálogo</a></div>
@@ -201,6 +240,10 @@
         </div></div>
       </section>`;
     bindCatalog();
+    main.querySelectorAll("[data-scroll]").forEach(b => b.addEventListener("click", () => {
+      const el = document.getElementById(b.dataset.scroll);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }));
   }
 
   let currentCat = "Todos";
