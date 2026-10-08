@@ -290,9 +290,9 @@ body.has-sticky .wa-float{bottom:calc(84px + env(safe-area-inset-bottom))}
 .top-item:first-child .rank{-webkit-text-stroke-color:var(--hot);opacity:1}
 .top-img{display:block;aspect-ratio:1/1;background:#fff;border-radius:var(--radius-sm);overflow:hidden}
 .top-img img{width:100%;height:100%;object-fit:contain}
-.top-body h3{margin:6px 0 4px;font-size:1.05rem;font-family:Inter,sans-serif;font-weight:700;padding-right:56px}
+.top-body h3{margin:6px 0 4px;font-size:1.05rem;font-family:Inter,sans-serif;font-weight:700}
 .top-body p{margin:0 0 8px;font-size:.9rem}
-.top-tags{display:flex;flex-wrap:wrap;gap:6px}
+.top-tags{display:flex;flex-wrap:wrap;gap:6px;padding-right:64px}
 .top-tags span{font-size:.68rem;font-weight:800;letter-spacing:.03em;padding:4px 9px;border-radius:999px}
 .tag-hot{background:linear-gradient(90deg,var(--hot),var(--hot-2));color:#1A0A00}
 .tag-sale{background:rgba(255,90,54,.14);color:#FFB49E;border:1px solid rgba(255,90,54,.4)}
