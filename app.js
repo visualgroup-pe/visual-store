@@ -109,7 +109,7 @@
     <article class="card reveal">
       <a href="#/p/${p.slug}" class="img" aria-label="${esc(p.nombre)}">
         <img src="${esc(p.imagenes[0])}" alt="${esc(p.nombre)}" loading="lazy">
-        ${p.destacado ? '<span class="badge">Más pedido</span>' : ""}
+        ${p.destacado ? '<span class="badge">Destacado</span>' : ""}
       </a>
       <div class="body">
         <span class="cat">${esc(p.categoria)}</span>
@@ -156,14 +156,14 @@
           <div class="reveal">
             <span class="eyebrow">Tech útil · Hecho para tu día a día</span>
             <h1>Gadgets que <span class="grad-text">entran por los ojos</span> y te hacen la vida más fácil.</h1>
-            <p class="lead">Bienestar, hogar y tecnología seleccionados para ti. Pides en un minuto, te llega rápido y pagas recién al recibir.</p>
+            <p class="lead">Tecnología, belleza, auto y mascotas: productos seleccionados para ti. Pides en un minuto, te llega rápido y pagas recién al recibir.</p>
             <div class="hero-ctas">
               <a class="btn btn-gold" href="#/catalogo">Ver productos</a>
               <a class="btn btn-ghost" href="#/como-comprar">¿Cómo compro?</a>
             </div>
           </div>
           <a class="hero-card reveal" href="#/p/${hero.slug}">
-            <span class="tag">El más pedido</span>
+            <span class="tag">Destacado</span>
             <div class="img"><img src="${esc(hero.imagenes[0])}" alt="${esc(hero.nombre)}"></div>
             <div class="row"><h3>${esc(hero.nombre)}</h3><b class="gold">${money(hero.precio)}</b></div>
           </a>
@@ -172,7 +172,7 @@
       <div class="wrap">${trustBar()}</div>
       <section class="section">
         <div class="wrap">
-          <div class="section-head"><div><span class="eyebrow">Favoritos</span><h2>Lo más pedido</h2></div><a class="btn btn-ghost" href="#/catalogo">Ver todo el catálogo</a></div>
+          <div class="section-head"><div><span class="eyebrow">Favoritos</span><h2>Destacados</h2></div><a class="btn btn-ghost" href="#/catalogo">Ver todo el catálogo</a></div>
           <div class="grid grid-3">${featured.map(card).join("")}</div>
         </div>
       </section>
