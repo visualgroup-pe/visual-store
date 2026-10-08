@@ -21,17 +21,18 @@ google-apps-script.js    (Opcional) guarda pedidos y reclamos en Google Sheets
    - `titular`, `ruc` y `direccion`: la ley exige mostrar el RUC en toda oferta online.
 2. Revisa en `products.js` los precios y textos.
 
-## Publicar gratis en Cloudflare Pages (conectado a GitHub)
+## Publicación: GitHub Pages
 
-El código vive en el repositorio privado `visualgroup-pe/visual-store`.
+La tienda está en **https://store.visualgroup.net** y se publica gratis con GitHub Pages desde el repositorio público `visualgroup-pe/visual-store` (rama `main`, carpeta raíz).
 
-1. Crea una cuenta gratis en https://dash.cloudflare.com y entra a **Workers & Pages** → **Create** → **Pages** → **Connect to Git**.
-2. Autoriza GitHub y elige el repositorio `visual-store`.
-3. Configuración de compilación: *Framework preset* **None**, *Build command* vacío, *Build output directory* `/`.
-4. **Save and Deploy**. Te da una dirección tipo `visual-store.pages.dev`.
-5. Para usar tu dominio (ej.: `visualstore.pe`): en el proyecto, **Custom domains** → agrega el dominio y sigue las instrucciones de DNS.
+- Configuración: repositorio → **Settings** → **Pages** (Deploy from a branch · main · / (root); dominio personalizado `store.visualgroup.net`; *Enforce HTTPS* activado).
+- DNS (Squarespace Domains): registro **CNAME** `store` → `visualgroup-pe.github.io`. No toques los demás registros (correo de Google Workspace y el sitio principal).
+- El archivo `CNAME` del repositorio lo crea GitHub con el dominio; no lo borres.
+- Copia de respaldo: `visual-store.pages.dev` (Cloudflare Pages) sigue publicando la misma rama.
 
-Cada vez que cambies un archivo en GitHub (por ejemplo, un precio en `products.js`), Cloudflare publica la nueva versión sola en uno o dos minutos.
+Cada vez que cambies un archivo en GitHub (por ejemplo, un precio en `products.js`), GitHub Pages publica la nueva versión sola en uno o dos minutos.
+
+Como el repositorio es público, **no subas datos privados** (contraseñas, llaves, datos de clientes). Los pedidos van a WhatsApp y a Google Sheets, no al repositorio.
 
 ## Cómo procesar un pedido
 
