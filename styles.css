@@ -305,3 +305,4 @@ body.has-sticky .wa-float{bottom:calc(84px + env(safe-area-inset-bottom))}
 @media(min-width:760px){.top-item{grid-template-columns:180px 1fr;padding:20px}.top-item .rank{font-size:3.4rem}}
 @media(max-width:480px){.top-item{grid-template-columns:96px 1fr;gap:12px;padding:12px}.top-ctas .btn{flex:1 1 100%}.top-body h3{font-size:.98rem}}
 @media(prefers-reduced-motion:reduce){.promo-track,.btn-pulse{animation:none}}
+.promo-band + .wrap .trust{margin-top:22px}
