@@ -466,7 +466,8 @@
     const paint = () => {
       const d = form.departamento.value;
       const codOk = !d || C.departamentosContraentrega.includes(d);
-      const prev = method();
+      const cur = form.querySelector('input[name="pago"]:checked');
+      const prev = cur ? cur.value : (YAPE_ON ? "yape" : "cod");
       const opts = [];
       if (YAPE_ON) opts.push(`<label class="opt"><input type="radio" name="pago" value="yape"><span class="t"><b>Paga ahora con Yape <span class="save">Más rápido</span></b><span>Confirmación inmediata, tu pedido sale antes. Todo el Perú.</span></span><span class="p yape-logo">Yape</span></label>`);
       if (codOk) opts.push(`<label class="opt"><input type="radio" name="pago" value="cod"><span class="t"><b>Pago contraentrega</b><span>Pagas al recibir, en efectivo o Yape. Te confirmamos por WhatsApp.</span></span><span class="p">💵</span></label>`);
