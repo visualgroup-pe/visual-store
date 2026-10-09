@@ -88,7 +88,7 @@
       </div>`;
     }).join("");
     foot.innerHTML = `<div class="totals"><span>Total</span><b>${money(cartTotal())}</b></div>
-      <p class="small muted" style="margin:0 0 12px">Envío gratis. Pagas al recibir en las zonas con contraentrega.</p>
+      <p class="small muted" style="margin:0 0 12px">Envío gratis. Pagas seguro con Yape o tarjeta al finalizar.</p>
       <a class="btn btn-gold btn-block" href="#/checkout" data-close>Finalizar pedido</a>`;
   }
   function openDrawer() { const d = $("#drawer"); d.classList.add("open"); d.setAttribute("aria-hidden", "false"); renderDrawer(); setTimeout(() => $(".drawer-head .icon-btn").focus(), 50); }
@@ -139,7 +139,7 @@
                 <p class="muted">${esc(p.corto)}</p>
                 <div class="top-price"><b>${money(p.precio)}</b><span>o 2 por ${money(p.precioPack)}</span></div>
                 <div class="top-ctas">
-                  <a class="btn btn-gold btn-pulse" href="#/p/${p.slug}">¡Lo quiero! · Pago al recibir</a>
+                  <a class="btn btn-gold btn-pulse" href="#/p/${p.slug}">¡Lo quiero! · Comprar ahora</a>
                   <button class="btn btn-ghost" data-add="${p.slug}">Agregar al carrito</button>
                 </div>
               </div>
@@ -151,33 +151,33 @@
 
   const promoBand = () => {
     const max = Math.max(...P.map(ahorro));
-    const items = ["🔥 SALE: packs x2 con descuento", `Ahorra hasta ${money(max)} llevando 2`, "🚚 Envío gratis", "💵 Pagas al recibir", "🛡️ Garantía de " + C.garantiaDias + " días"];
+    const items = ["🔥 SALE: packs x2 con descuento", `Ahorra hasta ${money(max)} llevando 2`, "🚚 Envío gratis", "💳 Paga con Yape o tarjeta", "🛡️ Garantía de " + C.garantiaDias + " días"];
     const row = items.map(t => `<span>${esc(t)}</span>`).join('<i aria-hidden="true">✦</i>');
     return `<div class="promo-band" role="note"><div class="promo-track">${row}<i aria-hidden="true">✦</i>${row}<i aria-hidden="true">✦</i></div></div>`;
   };
 
   const trustBar = () => `
     <div class="trust">
-      <div class="trust-item">${ICON.cash}<div><b>Pagas al recibir</b><span>En efectivo o Yape al courier</span></div></div>
+      <div class="trust-item">${ICON.cash}<div><b>Yape o tarjeta</b><span>Pago seguro con Mercado Pago</span></div></div>
       <div class="trust-item">${ICON.truck}<div><b>Envío gratis</b><span>${esc(C.tiempoEntrega)}</span></div></div>
       <div class="trust-item">${ICON.shield}<div><b>Garantía ${C.garantiaDias} días</b><span>Por fallas de fábrica</span></div></div>
-      <div class="trust-item">${ICON.chat}<div><b>Atención por WhatsApp</b><span>Te confirmamos cada pedido</span></div></div>
+      <div class="trust-item">${ICON.chat}<div><b>Atención por WhatsApp</b><span>Te acompañamos en cada pedido</span></div></div>
     </div>`;
 
   const steps = () => `
     <div class="steps">
       <div class="step"><div class="n">1</div><h3>Elige tu producto</h3><p class="muted">Agrega al carrito lo que te guste. El pack x2 sale más a cuenta.</p></div>
-      <div class="step"><div class="n">2</div><h3>Déjanos tus datos</h3><p class="muted">Completa nombre, celular y dirección. Te escribimos por WhatsApp para confirmar.</p></div>
-      <div class="step"><div class="n">3</div><h3>Recibe y paga</h3><p class="muted">El courier te lo entrega en ${esc(C.tiempoEntrega)}. Pagas recién ahí.</p></div>
+      <div class="step"><div class="n">2</div><h3>Paga seguro</h3><p class="muted">Completa tus datos y paga con Yape o con tarjeta de crédito o débito, sin salir de la web.</p></div>
+      <div class="step"><div class="n">3</div><h3>Recíbelo en casa</h3><p class="muted">Te avisamos por correo cuando sale, con tu número de guía. Llega en ${esc(C.tiempoEntrega)}.</p></div>
     </div>`;
 
   const FAQ = [
-    ["¿Cómo funciona el pago contraentrega?", "Haces tu pedido sin pagar nada. Cuando el courier llega con tu producto, le pagas en efectivo o por Yape. Así compras con total confianza."],
-    ["¿Cuánto demora el envío?", `Entre ${C.tiempoEntrega}. Antes de despachar te escribimos por WhatsApp para confirmar tu dirección.`],
-    ["¿Cuánto cuesta el envío?", "El envío es gratis en las zonas con contraentrega. El precio que ves es el precio final."],
-    ["¿Envían a todo el Perú?", "Sí. En Lima, Callao y las ciudades principales pagas al recibir. Para otras zonas coordinamos por WhatsApp el envío con pago adelantado por Yape o Plin."],
+    ["¿Cómo pago?", "Aquí mismo en la web, con Yape (tu celular y el código de aprobación de tu app) o con tarjeta de crédito o débito. El pago lo procesa Mercado Pago y se confirma al instante."],
+    ["¿Cuánto demora el envío?", `Entre ${C.tiempoEntrega}. Cuando tu pedido sale a reparto te avisamos por correo con tu número de guía.`],
+    ["¿Cuánto cuesta el envío?", "El envío es gratis. El precio que ves es el precio final."],
+    ["¿Envían a todo el Perú?", "Sí, enviamos a todo el Perú con couriers nacionales. En zonas alejadas el plazo puede ser un poco mayor."],
     ["¿Qué pasa si el producto llega con fallas?", `Tienes ${C.garantiaDias} días de garantía por fallas de fábrica. Escríbenos por WhatsApp con una foto o video y lo cambiamos.`],
-    ["¿Cómo sé que mi pedido fue recibido?", "Al terminar tu pedido te mostramos un código y se abre WhatsApp con el resumen. Te respondemos para confirmar."]
+    ["¿Cómo sé que mi pedido fue recibido?", "Al pagar ves la confirmación con tu código de pedido y te llega un correo. Puedes ver el estado cuando quieras en la página Estado de mi pedido."]
   ];
   const faqHTML = () => `<div class="faq">${FAQ.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join("")}</div>`;
 
@@ -192,7 +192,7 @@
           <div class="reveal">
             <span class="eyebrow">Tech útil · Hecho para tu día a día</span>
             <h1>Gadgets que <span class="grad-text">entran por los ojos</span> y te hacen la vida más fácil.</h1>
-            <p class="lead">Tecnología, belleza, auto y mascotas: productos seleccionados para ti. Pides en un minuto, te llega rápido y pagas recién al recibir.</p>
+            <p class="lead">Tecnología, belleza, auto y mascotas: productos seleccionados para ti. Pides en un minuto, pagas seguro con Yape o tarjeta y te llega rápido a casa.</p>
             <div class="hero-ctas">
               <button class="btn btn-gold btn-pulse" type="button" data-scroll="top5">🔥 Ver el Top 5</button>
               <a class="btn btn-ghost" href="#/catalogo">Ver todo el catálogo</a>
@@ -319,7 +319,7 @@
   function viewCatalog() {
     setTitle("Catálogo");
     main.innerHTML = `<section class="section"><div class="wrap">
-      <div class="section-head"><div><span class="eyebrow">Catálogo</span><h1 style="font-size:clamp(2rem,4.5vw,3rem)">Todo el catálogo</h1></div><p class="muted">Filtra por categoría, precio u ofertas. Todos con envío gratis y pago contraentrega en Lima y ciudades principales.</p></div>
+      <div class="section-head"><div><span class="eyebrow">Catálogo</span><h1 style="font-size:clamp(2rem,4.5vw,3rem)">Todo el catálogo</h1></div><p class="muted">Filtra por categoría, precio u ofertas. Todos con envío gratis y pago seguro con Yape o tarjeta.</p></div>
       ${catalogBlock()}</div></section>`;
     bindCatalog();
   }
@@ -345,13 +345,13 @@
             <p class="muted" style="font-size:1.05rem">${esc(p.corto)}</p>
             ${p.flash ? `<div class="pdp-flash">⚡ Oferta flash -${p.flashOff}% · termina en <b data-countdown>${window.VS_FLASH.left()}</b></div>` : ""}
             <div class="price-big" id="priceBig">${money(p.precio)}</div>${p.flash ? `<div class="was-line">Precio normal <s>${money(p.precioNormal)}</s></div>` : ""}
-            <div class="cod-note">${ICON.check.replace("<svg", '<svg width="18" height="18"')} Envío gratis · Pagas al recibir</div>
+            <div class="cod-note">${ICON.check.replace("<svg", '<svg width="18" height="18"')} Envío gratis · Paga con Yape o tarjeta</div>
             <div class="options" role="radiogroup" aria-label="Elige tu opción">
               <label class="opt"><input type="radio" name="opt" value="1" checked><span class="t"><b>1 unidad</b><span>Ideal para ti</span></span><span class="p">${money(p.precio)}</span></label>
               <label class="opt"><input type="radio" name="opt" value="2"><span class="t"><b>Pack x2 <span class="save">Ahorras ${money(save)}</span></b><span>Para ti y para regalar</span></span><span class="p">${money(p.precioPack)}</span></label>
             </div>
             <div class="buy">
-              <button class="btn btn-gold btn-block" id="buyNow">Pedir ahora · pago al recibir</button>
+              <button class="btn btn-gold btn-block" id="buyNow">Comprar ahora</button>
               <button class="btn btn-ghost btn-block" id="addCart">Agregar al carrito</button>
               <a class="btn btn-ghost btn-block" href="#" data-wa="Hola, tengo una consulta sobre: ${esc(p.nombre)}">${ICON.wa} Consultar por WhatsApp</a>
             </div>
@@ -440,7 +440,7 @@
                 </div>
                 <p class="small muted" style="margin:0">Pago seguro procesado por Mercado Pago. Tu límite diario de Yape debe cubrir el total.</p>
               </div>
-              <div id="zoneNote"></div>
+              <div class="card-box" id="cardBox" hidden><div id="cardBrick"></div></div>
               <div id="payMsg"></div>
 
               <label class="check"><input type="checkbox" id="f_ok" required><span>Acepto los <a href="#/legal/terminos" target="_blank">términos y condiciones</a> y la <a href="#/legal/privacidad" target="_blank">política de privacidad</a>, y autorizo el uso de mis datos para gestionar mi pedido.</span></label>
@@ -462,104 +462,123 @@
 
     const form = $("#orderForm");
     const payMsg = (html, kind) => { $("#payMsg").innerHTML = html ? `<div class="notice ${kind || "warn"}"><span>${html}</span></div>` : ""; };
-    const method = () => { const r = form.querySelector('input[name="pago"]:checked'); return r ? r.value : "cod"; };
-    const paint = () => {
-      const d = form.departamento.value;
-      const codOk = !d || C.departamentosContraentrega.includes(d);
-      const cur = form.querySelector('input[name="pago"]:checked');
-      const prev = cur ? cur.value : (YAPE_ON ? "yape" : "cod");
-      const opts = [];
-      if (YAPE_ON) opts.push(`<label class="opt"><input type="radio" name="pago" value="yape"><span class="t"><b>Paga ahora con Yape <span class="save">Más rápido</span></b><span>Confirmación inmediata, tu pedido sale antes. Todo el Perú.</span></span><span class="p yape-logo">Yape</span></label>`);
-      if (codOk) opts.push(`<label class="opt"><input type="radio" name="pago" value="cod"><span class="t"><b>Pago contraentrega</b><span>Pagas al recibir, en efectivo o Yape. Te confirmamos por WhatsApp.</span></span><span class="p">💵</span></label>`);
-      if (!YAPE_ON && !codOk) opts.push(`<label class="opt"><input type="radio" name="pago" value="cod"><span class="t"><b>Coordinar por WhatsApp</b><span>Para ${esc(d)}: pago adelantado y envío a agencia.</span></span><span class="p">💬</span></label>`);
-      $("#payOpts").innerHTML = opts.join("");
-      const pick = form.querySelector(`input[name="pago"][value="${prev}"]`) || form.querySelector('input[name="pago"]');
-      if (pick) pick.checked = true;
-      sync();
-    };
+    const method = () => { const r = form.querySelector('input[name="pago"]:checked'); return r ? r.value : ""; };
+    $("#payOpts").innerHTML = YAPE_ON
+      ? `<label class="opt"><input type="radio" name="pago" value="yape" checked><span class="t"><b>Yape</b><span>Con tu celular y el código de aprobación de tu app.</span></span><span class="p yape-logo">Yape</span></label>
+         <label class="opt"><input type="radio" name="pago" value="tarjeta"><span class="t"><b>Tarjeta de crédito o débito</b><span>Visa, Mastercard, American Express y Diners.</span></span><span class="p">💳</span></label>`
+      : `<div class="notice warn"><span>Los pagos en línea no están disponibles en este momento. Escríbenos por WhatsApp para comprar.</span></div>`;
     const sync = () => {
-      const y = method() === "yape";
+      const m = method(), y = m === "yape", t = m === "tarjeta";
       $("#yapeBox").hidden = !y;
-      $("#introTxt").textContent = y ? "Pagas con Yape aquí mismo y te avisamos por correo y WhatsApp cuando tu pedido salga." : "No pagas nada ahora. Te escribimos por WhatsApp para confirmar y pagas al recibir.";
-      $("#payBtn").innerHTML = y ? `Pagar ${money(cartTotal())} con Yape` : `${ICON.wa} Confirmar pedido por WhatsApp`;
-      $("#payHint").textContent = y ? "Al pagar, tu pedido queda confirmado al instante." : "Se abrirá WhatsApp con el resumen de tu pedido. Solo tienes que enviarlo.";
-      $("#totLbl").textContent = y ? "Total a pagar ahora" : "Total a pagar al recibir";
-      $("#sumNote").textContent = y ? `Pago protegido por Mercado Pago. Garantía de ${C.garantiaDias} días.` : `Pagas recién cuando tengas el producto en tus manos. Garantía de ${C.garantiaDias} días.`;
-      $("#f_email").closest(".field").querySelector("label").textContent = y ? "Correo" : "Correo (opcional)";
+      $("#cardBox").hidden = !t;
+      $("#payBtn").hidden = t || !YAPE_ON;
+      $("#payHint").hidden = t || !YAPE_ON;
+      $("#introTxt").textContent = "Paga seguro aquí mismo con Yape o tarjeta. Te avisamos por correo cuando tu pedido salga.";
+      $("#payBtn").innerHTML = `Pagar ${money(cartTotal())} con Yape`;
+      $("#payHint").textContent = "Al pagar, tu pedido queda confirmado al instante.";
+      $("#totLbl").textContent = "Total a pagar";
+      $("#sumNote").textContent = `Pago protegido por Mercado Pago. Garantía de ${C.garantiaDias} días.`;
       if (y && !form.yapeCel.value && form.celular.value) form.yapeCel.value = form.celular.value;
-      const d = form.departamento.value;
-      $("#zoneNote").innerHTML = !y && d && !C.departamentosContraentrega.includes(d) ? `<div class="notice warn"><span>Para ${esc(d)} coordinamos el envío por WhatsApp con pago adelantado (o recojo en agencia).</span></div>` : "";
+      if (t) mountCard();
       payMsg("");
     };
-    form.departamento.addEventListener("change", paint);
     form.addEventListener("change", e => { if (e.target.name === "pago") sync(); });
-    paint();
 
     const digits = v => v.replace(/\D/g, "").replace(/^51(?=9\d{8}$)/, "");
     const rules = {
       nombre: v => v.trim().split(/\s+/).length >= 2,
       celular: v => /^9\d{8}$/.test(digits(v)),
-      email: v => method() === "yape" ? /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) : (!v.trim() || /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim())),
+      email: v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()),
       dni: v => /^\d{8}$/.test(v.trim()) || /^[A-Za-z0-9]{9,12}$/.test(v.trim()),
       departamento: v => !!v, distrito: v => v.trim().length >= 3, direccion: v => v.trim().length >= 6, referencia: v => v.trim().length >= 4,
       yapeCel: v => method() !== "yape" || /^9\d{8}$/.test(digits(v)),
       otp: v => method() !== "yape" || /^\d{6}$/.test(v.trim())
     };
-    let busy = false;
-    form.addEventListener("submit", async e => {
-      e.preventDefault();
-      if (busy) return;
+    /** Valida el formulario; devuelve los datos del cliente o null. */
+    const validar = () => {
       let ok = true, first = null;
       Object.entries(rules).forEach(([k, fn]) => {
         const input = form[k], f = input.closest(".field"), good = fn(input.value);
         f.classList.toggle("error", !good); if (!good) { ok = false; first = first || input; }
       });
       const accepted = $("#f_ok").checked; $("#okErr").style.display = accepted ? "none" : "block"; if (!accepted) { ok = false; first = first || $("#f_ok"); }
-      if (!ok) { first.focus(); return; }
-
+      if (!ok) { first.focus(); first.scrollIntoView({ block: "center" }); return null; }
       const data = Object.fromEntries(new FormData(form).entries());
       delete data.otp; delete data.yapeCel; delete data.pago;
       data.celular = digits(data.celular); data.email = (data.email || "").trim();
       store.set("vs_customer", { nombre: data.nombre, celular: data.celular, email: data.email, dni: data.dni, departamento: data.departamento, distrito: data.distrito, direccion: data.direccion, referencia: data.referencia });
+      return data;
+    };
+    /** Envía el pago al servidor. Devuelve true si quedó aprobado. */
+    const pagar = async (tipo, data, extra, onError) => {
       const code = orderCode("VS");
       const total = cartTotal();
-      const lines = cart.map(i => ({ producto: bySlug(i.slug).nombre, dropiId: bySlug(i.slug).dropiId, pack: i.pack, cantidad: i.qty, subtotal: linePrice(i) }));
-
-      if (method() === "yape") {
-        busy = true; const btn = $("#payBtn"); btn.disabled = true; btn.textContent = "Procesando pago…"; payMsg("");
-        try {
-          const token = await yapeToken(digits(form.yapeCel.value), form.otp.value.trim());
-          const r = await fetch(C.sheetsWebhook, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: JSON.stringify({ ...data, tipo: "pago_yape", codigo: code, token, total, items: cart.map(i => ({ slug: i.slug, pack: !!i.pack, qty: i.qty })) }) });
-          const res = await r.json();
-          if (res.ok) {
-            track("Purchase", { value: res.total, currency: "PEN", content_ids: cart.map(i => bySlug(i.slug).dropiId) });
-            store.set("vs_last_order", { code, total: res.total, paid: true, cel4: data.celular.slice(-4) });
-            cart = []; saveCart();
-            location.hash = "#/gracias";
-            return;
-          }
-          form.otp.value = "";
-          if (res.error === "precio") { payMsg(`El precio de un producto cambió (nuevo total: <b>${money(res.total)}</b>). Recarga la página para ver el total actualizado; no se hizo ningún cobro.`); }
-          else if (res.error === "rechazado") { payMsg(yapeError(res.detalle)); }
-          else { payMsg("No pudimos procesar el pago y no se hizo ningún cobro. Intenta de nuevo o elige pago contraentrega."); }
-        } catch (err) {
-          form.otp.value = "";
-          payMsg(err && err.yape ? err.message : "No pudimos conectar con Yape. Revisa tu celular y código e inténtalo de nuevo.");
-        } finally { busy = false; btn.disabled = false; sync(); }
-        return;
+      const r = await fetch(C.sheetsWebhook, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ ...data, ...extra, tipo, codigo: code, total, items: cart.map(i => ({ slug: i.slug, pack: !!i.pack, qty: i.qty })) }) });
+      const res = await r.json();
+      if (res.ok) {
+        track("Purchase", { value: res.total, currency: "PEN", content_ids: cart.map(i => bySlug(i.slug).dropiId) });
+        store.set("vs_last_order", { code, total: res.total, paid: true, cel4: data.celular.slice(-4) });
+        cart = []; saveCart();
+        location.hash = "#/gracias";
+        return true;
       }
+      if (res.error === "precio") payMsg(`El precio de un producto cambió (nuevo total: <b>${money(res.total)}</b>). Recarga la página para ver el total actualizado; no se hizo ningún cobro.`);
+      else if (res.error === "rechazado") payMsg(onError(res.detalle, res.status));
+      else payMsg("No pudimos procesar el pago y no se hizo ningún cobro. Intenta de nuevo o escríbenos por WhatsApp.");
+      return false;
+    };
 
-      const cod = C.departamentosContraentrega.includes(data.departamento);
-      const items = cart.map(i => { const p = bySlug(i.slug); return `• ${i.qty} × ${p.nombre}${i.pack ? " (Pack x2)" : ""} — ${money(linePrice(i))}`; }).join("\n");
-      const msg = `Hola ${C.nombre}, quiero hacer este pedido:\n\nPedido: ${code}\n${items}\nTotal: ${money(total)}\nPago: ${cod ? "contraentrega" : "por coordinar (fuera de zona contraentrega)"}\n\nNombre: ${data.nombre}\nCelular: ${data.celular}\nDNI/CE: ${data.dni}\nDirección: ${data.direccion}, ${data.distrito}, ${data.departamento}\nReferencia: ${data.referencia}${data.notas ? `\nNotas: ${data.notas}` : ""}`;
-      postWebhook({ ...data, tipo: "pedido", codigo: code, fecha: new Date().toISOString(), total, pago: cod ? "contraentrega" : "coordinar", items: lines });
-      track("Lead", { value: total, content_ids: cart.map(i => bySlug(i.slug).dropiId) });
-      const url = waLink(msg);
-      store.set("vs_last_order", { code, url, total, cel4: data.celular.slice(-4) });
-      cart = []; saveCart();
-      location.hash = "#/gracias";
-      window.open(url, "_blank", "noopener");
+    /* Tarjeta: formulario seguro de Mercado Pago (los datos de la tarjeta no pasan por nuestra web) */
+    let cardMounted = false;
+    const mountCard = async () => {
+      if (cardMounted) return;
+      cardMounted = true;
+      try {
+        await loadMP();
+        const mp = new window.MercadoPago(C.mpPublicKey, { locale: "es-PE" });
+        const light = document.documentElement.getAttribute("data-theme") === "light";
+        await mp.bricks().create("cardPayment", "cardBrick", {
+          initialization: { amount: cartTotal(), payer: { email: form.email.value.trim() || undefined } },
+          customization: { visual: { style: { theme: light ? "default" : "dark" }, texts: { formSubmit: `Pagar ${money(cartTotal())}` } }, paymentMethods: { maxInstallments: 12 } },
+          callbacks: {
+            onReady: () => {},
+            onError: err => { console.warn(err); },
+            onSubmit: async fd => {
+              payMsg("");
+              const data = validar();
+              if (!data) { payMsg("Completa tus datos de entrega antes de pagar."); throw new Error("datos"); }
+              const ok = await pagar("pago_tarjeta", data, {
+                token: fd.token, payment_method_id: fd.payment_method_id, issuer_id: fd.issuer_id,
+                installments: fd.installments, identification: fd.payer && fd.payer.identification,
+                email: data.email
+              }, cardError);
+              if (!ok) throw new Error("rechazado");
+            }
+          }
+        });
+      } catch (err) {
+        cardMounted = false;
+        payMsg("No pudimos cargar el pago con tarjeta. Recarga la página o paga con Yape.");
+      }
+    };
+
+    sync();
+    let busy = false;
+    form.addEventListener("submit", async e => {
+      e.preventDefault();
+      if (busy || method() !== "yape") return;
+      const data = validar();
+      if (!data) return;
+      busy = true; const btn = $("#payBtn"); btn.disabled = true; btn.textContent = "Procesando pago…"; payMsg("");
+      try {
+        const token = await yapeToken(digits(form.yapeCel.value), form.otp.value.trim());
+        const ok = await pagar("pago_yape", data, { token }, yapeError);
+        if (!ok) form.otp.value = "";
+      } catch (err) {
+        form.otp.value = "";
+        payMsg(err && err.yape ? err.message : "No pudimos conectar con Yape. Revisa tu celular y código e inténtalo de nuevo.");
+      } finally { busy = false; btn.disabled = false; if (location.hash.indexOf("checkout") >= 0) sync(); }
     });
   }
 
@@ -583,14 +602,30 @@
   function yapeError(d) {
     const m = {
       cc_rejected_insufficient_amount: "Tu Yape no tiene saldo o límite suficiente para este monto.",
-      cc_amount_rate_limit_exceeded: "El monto supera tu límite de Yape. Puedes subir tu límite en la app o elegir contraentrega.",
+      cc_amount_rate_limit_exceeded: "El monto supera tu límite de Yape. Puedes subir tu límite en la app Yape e intentarlo de nuevo.",
       cc_rejected_max_attempts: "Superaste el número de intentos. Espera unos minutos y genera un código nuevo.",
       cc_rejected_call_for_authorize: "Yape necesita que autorices el pago. Revisa tu app.",
       cc_rejected_card_type_not_allowed: "Este número no tiene Yape habilitado para compras online.",
       cc_rejected_bad_filled_security_code: "El código de aprobación no es correcto o venció. Genera uno nuevo.",
       cc_rejected_bad_filled_other: "El código de aprobación no es correcto o venció. Genera uno nuevo."
     };
-    return (m[d] || "Yape rechazó el pago. Genera un código nuevo e inténtalo otra vez, o elige contraentrega.") + " No se hizo ningún cobro.";
+    return (m[d] || "Yape rechazó el pago. Genera un código nuevo e inténtalo otra vez, o escríbenos por WhatsApp.") + " No se hizo ningún cobro.";
+  }
+
+  function cardError(d) {
+    const m = {
+      cc_rejected_insufficient_amount: "Tu tarjeta no tiene saldo suficiente.",
+      cc_rejected_bad_filled_card_number: "Revisa el número de tu tarjeta.",
+      cc_rejected_bad_filled_date: "Revisa la fecha de vencimiento.",
+      cc_rejected_bad_filled_security_code: "Revisa el código de seguridad (CVV).",
+      cc_rejected_bad_filled_other: "Revisa los datos de tu tarjeta.",
+      cc_rejected_call_for_authorize: "Tu banco necesita que autorices el pago. Llámalo o usa otra tarjeta.",
+      cc_rejected_card_disabled: "Tu tarjeta no está activa para compras por internet. Actívala con tu banco o usa otra.",
+      cc_rejected_duplicated_payment: "Ya hiciste un pago por este monto hace un momento. Revisa tu correo antes de intentarlo otra vez.",
+      cc_rejected_high_risk: "El pago fue rechazado por seguridad. Prueba con Yape o con otra tarjeta.",
+      cc_rejected_max_attempts: "Superaste el número de intentos. Prueba con otra tarjeta o con Yape."
+    };
+    return (m[d] || "Tu banco rechazó el pago. Prueba con otra tarjeta o con Yape.") + " No se hizo ningún cobro.";
   }
 
   function viewThanks() {
@@ -601,7 +636,7 @@
         <div class="ok-icon">${ICON.check}</div>
         <h1 style="font-size:clamp(2rem,5vw,2.8rem)">¡Pago recibido!</h1>
         <p class="muted">Tu código de pedido es</p><p class="code">${esc(o.code)}</p>
-        <p class="muted">Pagaste <b>${money(o.total)}</b> con Yape. Ya estamos preparando tu pedido: te enviaremos un correo y un WhatsApp cuando salga a reparto, con tu número de guía.</p>
+        <p class="muted">Tu pago de <b>${money(o.total)}</b> fue aprobado. Ya estamos preparando tu pedido: te enviaremos un correo cuando salga a reparto, con tu número de guía.</p>
         <a class="btn btn-gold" href="#/seguimiento/${esc(o.code)}">Ver estado de mi pedido</a>
         <p style="margin-top:22px"><a class="muted" href="#/catalogo" style="text-decoration:underline">Seguir comprando</a></p>
       </div>`;
@@ -675,9 +710,9 @@
   const LEGAL = {
     terminos: ["Términos y condiciones", `
       <p>Estos términos regulan las compras en ${esc(C.nombre)}, tienda online operada por ${esc(C.titular)} (RUC ${esc(C.ruc)}), con domicilio en ${esc(C.direccion)}. Al hacer un pedido aceptas estas condiciones.</p>
-      <h2>1. Productos y precios</h2><p>Los precios están en soles e incluyen impuestos y envío a las zonas con pago contraentrega. Las fotos son referenciales; las características de cada producto se indican en su ficha.</p>
-      <h2>2. Pedidos</h2><p>Un pedido se considera confirmado cuando te contactamos por WhatsApp y validamos tus datos de entrega. Podemos cancelar un pedido si no logramos comunicarnos contigo o si el producto se agota; en ese caso te avisaremos.</p>
-      <h2>3. Pago</h2><p>En las zonas con contraentrega pagas al courier al recibir tu producto, en efectivo o por Yape. Para otras zonas coordinamos el pago adelantado por Yape o Plin.</p>
+      <h2>1. Productos y precios</h2><p>Los precios están en soles e incluyen impuestos y envío. Las fotos son referenciales; las características de cada producto se indican en su ficha.</p>
+      <h2>2. Pedidos</h2><p>Un pedido se confirma cuando el pago es aprobado. Si el producto se agota o no podemos entregarlo, te avisamos y te devolvemos el íntegro de tu pago.</p>
+      <h2>3. Pago</h2><p>El pago se realiza en línea con Yape o tarjeta de crédito o débito, procesado por Mercado Pago, al momento de hacer el pedido. No aceptamos pago contra entrega.</p>
       <h2>4. Entrega</h2><p>El plazo estimado es de ${esc(C.tiempoEntrega)}. Puede variar por causas ajenas a nosotros, como clima, feriados o zonas de difícil acceso.</p>
       <h2>5. Cambios, devoluciones y garantía</h2><p>Se rigen por nuestra <a href="#/legal/cambios">política de cambios, devoluciones y garantía</a>.</p>
       <h2>6. Reclamos</h2><p>Contamos con un <a href="#/reclamaciones">Libro de Reclamaciones virtual</a>, conforme al Código de Protección y Defensa del Consumidor.</p>`],
@@ -692,13 +727,12 @@
       <h2>Garantía de ${C.garantiaDias} días</h2><p>Todos nuestros productos tienen ${C.garantiaDias} días de garantía desde la entrega por fallas de fábrica. Escríbenos por WhatsApp con tu código de pedido y una foto o video de la falla; si corresponde, te enviamos un producto nuevo sin costo.</p>
       <h2>Producto equivocado o dañado en el envío</h2><p>Si recibes un producto distinto al que pediste o llega dañado, avísanos dentro de las 48 horas de recibido y lo cambiamos sin costo.</p>
       <h2>Condiciones</h2><ul><li>El producto debe estar completo, con sus accesorios y, de ser posible, en su empaque.</li><li>La garantía no cubre daños por mal uso, golpes, humedad o manipulación indebida.</li><li>Productos de cuidado personal que ya fueron usados solo se cambian por falla de fábrica.</li></ul>
-      <h2>Devoluciones de dinero</h2><p>Si no podemos reponer el producto, te devolvemos el importe pagado por Yape, Plin o transferencia en un plazo máximo de 15 días hábiles.</p>`],
+      <h2>Devoluciones de dinero</h2><p>Si no podemos reponer el producto, te devolvemos el importe pagado por el mismo medio de pago en un plazo máximo de 15 días hábiles.</p>`],
     envios: ["Envíos", `
       <p>Trabajamos con couriers nacionales para llevar tu pedido a todo el Perú.</p>
-      <h2>Zonas con pago contraentrega</h2><p>${C.departamentosContraentrega.map(esc).join(", ")}. En estas zonas el envío es gratis y pagas al recibir.</p>
-      <h2>Otras zonas</h2><p>Coordinamos por WhatsApp el envío con pago adelantado por Yape o Plin, o con recojo en agencia.</p>
-      <h2>Plazos</h2><p>${esc(C.tiempoEntrega)}. Antes de despachar confirmamos tu pedido por WhatsApp.</p>
-      <h2>Al recibir</h2><p>Ten a mano tu documento de identidad. Revisa el paquete frente al courier antes de pagar.</p>`]
+      <h2>Cobertura</h2><p>Enviamos a todo el Perú. El envío es gratis y el pago se hace en línea con Yape o tarjeta al comprar.</p>
+      <h2>Plazos</h2><p>${esc(C.tiempoEntrega)}. En zonas alejadas puede tomar un poco más. Cuando tu pedido sale te avisamos por correo con tu número de guía, y puedes ver el estado en <a href="#/seguimiento/">Estado de mi pedido</a>.</p>
+      <h2>Al recibir</h2><p>Ten a mano tu documento de identidad y revisa el paquete frente al courier.</p>`]
   };
   function viewLegal(key) {
     const l = LEGAL[key]; if (!l) return viewNotFound();
