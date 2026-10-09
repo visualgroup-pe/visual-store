@@ -310,3 +310,70 @@ body.has-sticky .wa-float{bottom:calc(84px + env(safe-area-inset-bottom))}
 .cat-search{width:100%;max-width:520px;min-height:48px;padding:0 18px;border-radius:999px;border:1px solid var(--border-hi);background:var(--bg-mid);color:var(--text);font-size:1rem}
 .cat-search:focus{outline:2px solid var(--gold);outline-offset:2px}
 .more-wrap{display:flex;justify-content:center;margin-top:24px}
+
+/* ---------- Filtros avanzados ---------- */
+.cat-tools{display:grid;gap:12px;margin-bottom:14px}
+.cat-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.sel{display:flex;align-items:center;gap:8px;background:var(--bg-mid);border:1px solid var(--border-hi);border-radius:999px;padding:0 6px 0 16px;min-height:44px;font-size:.85rem;color:var(--muted)}
+.sel select{background:transparent;border:0;color:var(--text);font-weight:600;min-height:42px;padding:0 8px;cursor:pointer}
+.sel select option{background:var(--bg-mid);color:var(--text)}
+.chip{display:inline-flex;align-items:center;gap:6px}
+.chip:disabled{opacity:.35;cursor:not-allowed}
+.chip-n{font-size:.72rem;opacity:.7;font-weight:600}
+.chips-sub{margin-top:8px}
+.chips-sub:empty{display:none}
+.chip-sub{font-size:.82rem;padding:7px 13px;border-style:dashed}
+.chip-sub[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:#091629;border-style:solid}
+.chip-flash{border-color:var(--hot);color:var(--hot)}
+.chip-flash[aria-pressed="true"]{background:linear-gradient(90deg,var(--hot),var(--hot-2));color:#1A0A00;border-color:transparent}
+.cat-count{margin:14px 0 12px;color:var(--muted);font-size:.9rem}
+.cat-count b{color:var(--text)}
+.linkish{background:none;border:0;color:var(--gold);text-decoration:underline;cursor:pointer;padding:0;font-size:inherit}
+.empty{grid-column:1/-1;text-align:center;padding:40px 16px;border:1px dashed var(--border-hi);border-radius:var(--radius)}
+#catChips{overflow-x:auto;scrollbar-width:thin;padding-bottom:4px}
+
+/* ---------- Ofertas flash ---------- */
+.card .badge-flash{background:#E5484D;color:#fff;border:0}
+.card .price .was,.was-line s{color:var(--muted);font-weight:500;font-size:.85em}
+.was-line{color:var(--muted);font-size:.9rem;margin:-4px 0 10px}
+.flash{padding-top:28px}
+.flash-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:18px;margin-bottom:22px}
+.flash-head p{margin:0;max-width:560px}
+.countdown{display:grid;justify-items:center;gap:2px;padding:14px 22px;border-radius:var(--radius);background:linear-gradient(135deg,#E5484D,var(--hot-2));color:#fff;min-width:200px;box-shadow:0 18px 40px -22px rgba(229,72,77,.8)}
+.countdown span{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;opacity:.9}
+.countdown b{font-family:Syne,Inter,system-ui,sans-serif;font-size:2.2rem;line-height:1.1;font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.countdown small{font-size:.7rem;opacity:.85}
+.pdp-flash{display:inline-flex;gap:6px;align-items:center;background:rgba(229,72,77,.12);color:#FF8A8D;border:1px solid rgba(229,72,77,.45);border-radius:999px;padding:6px 14px;font-size:.85rem;font-weight:700;margin-bottom:10px}
+.pdp-flash b{font-variant-numeric:tabular-nums}
+.card .pack [data-countdown]{font-variant-numeric:tabular-nums;font-weight:700;color:var(--hot)}
+
+/* ---------- Botón de tema ---------- */
+.theme-btn{width:44px;height:44px;border-radius:50%;border:1px solid var(--border-hi);background:transparent;display:grid;place-items:center;cursor:pointer;color:var(--text);margin-left:auto}
+.theme-btn svg{width:20px;height:20px}
+.theme-btn + .cart-btn{margin-left:8px}
+
+/* ---------- Modo claro ---------- */
+:root[data-theme="light"]{
+  --bg:#F6F3EC; --bg-mid:#FFFFFF; --bg-card:#FFFFFF; --bg-deep:#ECE6DA;
+  --gold:#A57C1B; --gold-hi:#8A6510; --gold-dim:rgba(165,124,27,.12);
+  --teal:#1F6F86; --teal-dim:rgba(31,111,134,.12);
+  --text:#0E1A2B; --muted:#5A6878;
+  --border:rgba(14,26,43,.10); --border-hi:rgba(14,26,43,.20);
+  --shadow:0 18px 50px -24px rgba(14,26,43,.35);
+  --grad:linear-gradient(135deg,#A57C1B,#1F6F86);
+}
+:root[data-theme="light"] .nav{background:rgba(246,243,236,.88)}
+:root[data-theme="light"] .sticky-buy{background:rgba(255,255,255,.95)}
+:root[data-theme="light"] .logo-mark rect{fill:#0E1A2B}
+:root[data-theme="light"] .btn-gold{color:#fff;box-shadow:0 10px 30px -12px rgba(165,124,27,.6)}
+:root[data-theme="light"] .btn-gold:hover{background:#8A6510}
+:root[data-theme="light"] .cart-count,:root[data-theme="light"] .hero-card .tag,:root[data-theme="light"] .save,:root[data-theme="light"] .chip-sub[aria-pressed="true"]{color:#fff}
+:root[data-theme="light"] .card,:root[data-theme="light"] .trust-item,:root[data-theme="light"] .step,:root[data-theme="light"] .top-item,:root[data-theme="light"] .panel{box-shadow:0 8px 26px -18px rgba(14,26,43,.35)}
+:root[data-theme="light"] .tag-sale{color:#B23A1E;background:rgba(255,90,54,.10)}
+:root[data-theme="light"] .tag-ship{color:#145A6E}
+:root[data-theme="light"] .pdp-flash{color:#B42318}
+:root[data-theme="light"] .top-item{background:linear-gradient(135deg,#fff,#FBF8F2)}
+:root[data-theme="light"] .band{background:linear-gradient(135deg,rgba(165,124,27,.10),rgba(31,111,134,.10))}
+:root[data-theme="light"] .hero::before,:root[data-theme="light"] .hero::after{opacity:.35}
+:root[data-theme="light"] body{background:var(--bg)}
+@media(min-width:761px){.theme-btn{margin-left:8px}}
