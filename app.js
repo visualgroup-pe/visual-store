@@ -403,20 +403,24 @@
     }
     track("InitiateCheckout", { value: cartTotal(), num_items: cartUnits() });
     const saved = store.get("vs_customer", {});
+    const YAPE_ON = !!(C.mpPublicKey && C.sheetsWebhook);
     main.innerHTML = `
       <div class="wrap">
         <nav class="crumbs" aria-label="Ruta"><a href="#/">Inicio</a> / <span>Finalizar pedido</span></nav>
         <div class="checkout">
           <form class="panel" id="orderForm" novalidate>
             <h1 style="font-size:clamp(1.7rem,4vw,2.3rem)">Finaliza tu pedido</h1>
-            <p class="muted">No pagas nada ahora. Te escribimos por WhatsApp para confirmar y pagas al recibir.</p>
+            <p class="muted" id="introTxt"></p>
             <div class="form-grid">
               <div class="fieldset-title">Tus datos</div>
               <div class="form-grid two">
                 <div class="field"><label for="f_nombre">Nombre y apellido</label><input id="f_nombre" name="nombre" type="text" autocomplete="name" required value="${esc(saved.nombre)}"><span class="err">Escribe tu nombre completo.</span></div>
                 <div class="field"><label for="f_cel">Celular (WhatsApp)</label><input id="f_cel" name="celular" type="tel" inputmode="numeric" autocomplete="tel" placeholder="9XX XXX XXX" required value="${esc(saved.celular)}"><span class="err">Ingresa un celular de 9 dígitos que empiece con 9.</span></div>
               </div>
-              <div class="field"><label for="f_dni">DNI o carné de extranjería</label><input id="f_dni" name="dni" type="text" inputmode="numeric" required value="${esc(saved.dni)}"><span class="hint">El courier lo pide para entregarte el paquete.</span><span class="err">Ingresa un documento válido (8 dígitos para DNI).</span></div>
+              <div class="form-grid two">
+                <div class="field"><label for="f_email">Correo</label><input id="f_email" name="email" type="email" autocomplete="email" placeholder="tucorreo@gmail.com" value="${esc(saved.email)}"><span class="hint">Aquí te avisamos cuando tu pedido salga.</span><span class="err">Ingresa un correo válido.</span></div>
+                <div class="field"><label for="f_dni">DNI o carné de extranjería</label><input id="f_dni" name="dni" type="text" inputmode="numeric" required value="${esc(saved.dni)}"><span class="hint">El courier lo pide al entregar.</span><span class="err">Ingresa un documento válido (8 dígitos para DNI).</span></div>
+              </div>
               <div class="fieldset-title">Dirección de entrega</div>
               <div class="form-grid two">
                 <div class="field"><label for="f_dep">Departamento</label><select id="f_dep" name="departamento" required><option value="">Elige…</option>${DEPARTAMENTOS.map(d => `<option ${saved.departamento === d ? "selected" : ""}>${d}</option>`).join("")}</select><span class="err">Elige tu departamento.</span></div>
@@ -424,43 +428,86 @@
               </div>
               <div class="field"><label for="f_dir">Dirección</label><input id="f_dir" name="direccion" type="text" autocomplete="street-address" placeholder="Av./Jr./Calle, número, dpto." required value="${esc(saved.direccion)}"><span class="err">Escribe tu dirección.</span></div>
               <div class="field"><label for="f_ref">Referencia</label><input id="f_ref" name="referencia" type="text" placeholder="Ej.: frente al parque, casa de rejas negras" required value="${esc(saved.referencia)}"><span class="hint">Ayuda al courier a encontrarte a la primera.</span><span class="err">Agrega una referencia.</span></div>
-              <div id="zoneNote"></div>
               <div class="field"><label for="f_notas">Notas (opcional)</label><textarea id="f_notas" name="notas" placeholder="Horario preferido, piso, etc."></textarea></div>
+
+              <div class="fieldset-title">Forma de pago</div>
+              <div class="pay-opts" id="payOpts"></div>
+              <div class="yape-box" id="yapeBox" hidden>
+                <div class="yape-steps"><b>Cómo pagar:</b> abre tu app Yape → menú → <b>Código de aprobación</b>. Copia el código de 6 dígitos y escríbelo aquí (vence en unos minutos).</div>
+                <div class="form-grid two">
+                  <div class="field"><label for="f_ycel">Celular con Yape</label><input id="f_ycel" name="yapeCel" type="tel" inputmode="numeric" placeholder="9XX XXX XXX" autocomplete="off"><span class="err">Ingresa el celular de 9 dígitos de tu Yape.</span></div>
+                  <div class="field"><label for="f_otp">Código de aprobación</label><input id="f_otp" name="otp" type="text" inputmode="numeric" maxlength="6" placeholder="6 dígitos" autocomplete="one-time-code"><span class="err">El código tiene 6 dígitos.</span></div>
+                </div>
+                <p class="small muted" style="margin:0">Pago seguro procesado por Mercado Pago. Tu límite diario de Yape debe cubrir el total.</p>
+              </div>
+              <div id="zoneNote"></div>
+              <div id="payMsg"></div>
+
               <label class="check"><input type="checkbox" id="f_ok" required><span>Acepto los <a href="#/legal/terminos" target="_blank">términos y condiciones</a> y la <a href="#/legal/privacidad" target="_blank">política de privacidad</a>, y autorizo el uso de mis datos para gestionar mi pedido.</span></label>
               <span class="err" id="okErr" style="margin-top:-6px">Debes aceptar para continuar.</span>
-              <button class="btn btn-gold btn-block" type="submit">${ICON.wa} Confirmar pedido por WhatsApp</button>
-              <p class="small muted center" style="margin:0">Se abrirá WhatsApp con el resumen de tu pedido. Solo tienes que enviarlo.</p>
+              <button class="btn btn-gold btn-block" type="submit" id="payBtn"></button>
+              <p class="small muted center" style="margin:0" id="payHint"></p>
             </div>
           </form>
           <aside class="panel summary" aria-label="Resumen del pedido">
             <h2 style="font-size:1.3rem">Resumen</h2>
             <div id="sumLines"></div>
             <div class="totals" style="margin-top:14px"><span>Envío</span><span class="gold">Gratis</span></div>
-            <div class="totals"><span>Total a pagar al recibir</span><b>${money(cartTotal())}</b></div>
-            <div class="notice ok" style="margin-top:14px">${ICON.shield.replace("<svg", '<svg width="22" height="22" style="flex:none;color:#25D366"')}<span>Pagas recién cuando tengas el producto en tus manos. Garantía de ${C.garantiaDias} días.</span></div>
+            <div class="totals"><span id="totLbl">Total</span><b>${money(cartTotal())}</b></div>
+            <div class="notice ok" style="margin-top:14px">${ICON.shield.replace("<svg", '<svg width="22" height="22" style="flex:none;color:#25D366"')}<span id="sumNote"></span></div>
           </aside>
         </div>
       </div>`;
     $("#sumLines").innerHTML = cart.map(i => { const p = bySlug(i.slug); return `<div class="line"><img src="${esc(p.imagenes[0])}" alt=""><div><div class="n">${esc(p.nombre)}</div><div class="v">${i.qty} × ${i.pack ? "Pack x2" : "1 unidad"}</div></div><div class="r"><b>${money(linePrice(i))}</b></div></div>`; }).join("");
 
     const form = $("#orderForm");
-    const zone = () => {
-      const d = form.departamento.value, el = $("#zoneNote");
-      if (!d) { el.innerHTML = ""; return; }
-      el.innerHTML = C.departamentosContraentrega.includes(d)
-        ? `<div class="notice ok">${ICON.check.replace("<svg", '<svg width="20" height="20" style="flex:none;color:#25D366"')}<span>Tu zona tiene <b>pago contraentrega</b>. Pagas al recibir.</span></div>`
-        : `<div class="notice warn"><span>Para ${esc(d)} coordinamos el envío por WhatsApp con pago adelantado por Yape o Plin (o recojo en agencia). Igual envía tu pedido y te escribimos.</span></div>`;
+    const payMsg = (html, kind) => { $("#payMsg").innerHTML = html ? `<div class="notice ${kind || "warn"}"><span>${html}</span></div>` : ""; };
+    const method = () => { const r = form.querySelector('input[name="pago"]:checked'); return r ? r.value : "cod"; };
+    const paint = () => {
+      const d = form.departamento.value;
+      const codOk = !d || C.departamentosContraentrega.includes(d);
+      const prev = method();
+      const opts = [];
+      if (YAPE_ON) opts.push(`<label class="opt"><input type="radio" name="pago" value="yape"><span class="t"><b>Paga ahora con Yape <span class="save">Más rápido</span></b><span>Confirmación inmediata, tu pedido sale antes. Todo el Perú.</span></span><span class="p yape-logo">Yape</span></label>`);
+      if (codOk) opts.push(`<label class="opt"><input type="radio" name="pago" value="cod"><span class="t"><b>Pago contraentrega</b><span>Pagas al recibir, en efectivo o Yape. Te confirmamos por WhatsApp.</span></span><span class="p">💵</span></label>`);
+      if (!YAPE_ON && !codOk) opts.push(`<label class="opt"><input type="radio" name="pago" value="cod"><span class="t"><b>Coordinar por WhatsApp</b><span>Para ${esc(d)}: pago adelantado y envío a agencia.</span></span><span class="p">💬</span></label>`);
+      $("#payOpts").innerHTML = opts.join("");
+      const pick = form.querySelector(`input[name="pago"][value="${prev}"]`) || form.querySelector('input[name="pago"]');
+      if (pick) pick.checked = true;
+      sync();
     };
-    form.departamento.addEventListener("change", zone); zone();
+    const sync = () => {
+      const y = method() === "yape";
+      $("#yapeBox").hidden = !y;
+      $("#introTxt").textContent = y ? "Pagas con Yape aquí mismo y te avisamos por correo y WhatsApp cuando tu pedido salga." : "No pagas nada ahora. Te escribimos por WhatsApp para confirmar y pagas al recibir.";
+      $("#payBtn").innerHTML = y ? `Pagar ${money(cartTotal())} con Yape` : `${ICON.wa} Confirmar pedido por WhatsApp`;
+      $("#payHint").textContent = y ? "Al pagar, tu pedido queda confirmado al instante." : "Se abrirá WhatsApp con el resumen de tu pedido. Solo tienes que enviarlo.";
+      $("#totLbl").textContent = y ? "Total a pagar ahora" : "Total a pagar al recibir";
+      $("#sumNote").textContent = y ? `Pago protegido por Mercado Pago. Garantía de ${C.garantiaDias} días.` : `Pagas recién cuando tengas el producto en tus manos. Garantía de ${C.garantiaDias} días.`;
+      $("#f_email").closest(".field").querySelector("label").textContent = y ? "Correo" : "Correo (opcional)";
+      if (y && !form.yapeCel.value && form.celular.value) form.yapeCel.value = form.celular.value;
+      const d = form.departamento.value;
+      $("#zoneNote").innerHTML = !y && d && !C.departamentosContraentrega.includes(d) ? `<div class="notice warn"><span>Para ${esc(d)} coordinamos el envío por WhatsApp con pago adelantado (o recojo en agencia).</span></div>` : "";
+      payMsg("");
+    };
+    form.departamento.addEventListener("change", paint);
+    form.addEventListener("change", e => { if (e.target.name === "pago") sync(); });
+    paint();
 
+    const digits = v => v.replace(/\D/g, "").replace(/^51(?=9\d{8}$)/, "");
     const rules = {
       nombre: v => v.trim().split(/\s+/).length >= 2,
-      celular: v => /^9\d{8}$/.test(v.replace(/\D/g, "").replace(/^51/, "")),
+      celular: v => /^9\d{8}$/.test(digits(v)),
+      email: v => method() === "yape" ? /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) : (!v.trim() || /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim())),
       dni: v => /^\d{8}$/.test(v.trim()) || /^[A-Za-z0-9]{9,12}$/.test(v.trim()),
-      departamento: v => !!v, distrito: v => v.trim().length >= 3, direccion: v => v.trim().length >= 6, referencia: v => v.trim().length >= 4
+      departamento: v => !!v, distrito: v => v.trim().length >= 3, direccion: v => v.trim().length >= 6, referencia: v => v.trim().length >= 4,
+      yapeCel: v => method() !== "yape" || /^9\d{8}$/.test(digits(v)),
+      otp: v => method() !== "yape" || /^\d{6}$/.test(v.trim())
     };
-    form.addEventListener("submit", e => {
+    let busy = false;
+    form.addEventListener("submit", async e => {
       e.preventDefault();
+      if (busy) return;
       let ok = true, first = null;
       Object.entries(rules).forEach(([k, fn]) => {
         const input = form[k], f = input.closest(".field"), good = fn(input.value);
@@ -470,34 +517,141 @@
       if (!ok) { first.focus(); return; }
 
       const data = Object.fromEntries(new FormData(form).entries());
-      data.celular = data.celular.replace(/\D/g, "").replace(/^51/, "");
-      store.set("vs_customer", { nombre: data.nombre, celular: data.celular, dni: data.dni, departamento: data.departamento, distrito: data.distrito, direccion: data.direccion, referencia: data.referencia });
+      delete data.otp; delete data.yapeCel; delete data.pago;
+      data.celular = digits(data.celular); data.email = (data.email || "").trim();
+      store.set("vs_customer", { nombre: data.nombre, celular: data.celular, email: data.email, dni: data.dni, departamento: data.departamento, distrito: data.distrito, direccion: data.direccion, referencia: data.referencia });
       const code = orderCode("VS");
+      const total = cartTotal();
+      const lines = cart.map(i => ({ producto: bySlug(i.slug).nombre, dropiId: bySlug(i.slug).dropiId, pack: i.pack, cantidad: i.qty, subtotal: linePrice(i) }));
+
+      if (method() === "yape") {
+        busy = true; const btn = $("#payBtn"); btn.disabled = true; btn.textContent = "Procesando pago…"; payMsg("");
+        try {
+          const token = await yapeToken(digits(form.yapeCel.value), form.otp.value.trim());
+          const r = await fetch(C.sheetsWebhook, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({ ...data, tipo: "pago_yape", codigo: code, token, total, items: cart.map(i => ({ slug: i.slug, pack: !!i.pack, qty: i.qty })) }) });
+          const res = await r.json();
+          if (res.ok) {
+            track("Purchase", { value: res.total, currency: "PEN", content_ids: cart.map(i => bySlug(i.slug).dropiId) });
+            store.set("vs_last_order", { code, total: res.total, paid: true, cel4: data.celular.slice(-4) });
+            cart = []; saveCart();
+            location.hash = "#/gracias";
+            return;
+          }
+          form.otp.value = "";
+          if (res.error === "precio") { payMsg(`El precio de un producto cambió (nuevo total: <b>${money(res.total)}</b>). Recarga la página para ver el total actualizado; no se hizo ningún cobro.`); }
+          else if (res.error === "rechazado") { payMsg(yapeError(res.detalle)); }
+          else { payMsg("No pudimos procesar el pago y no se hizo ningún cobro. Intenta de nuevo o elige pago contraentrega."); }
+        } catch (err) {
+          form.otp.value = "";
+          payMsg(err && err.yape ? err.message : "No pudimos conectar con Yape. Revisa tu celular y código e inténtalo de nuevo.");
+        } finally { busy = false; btn.disabled = false; sync(); }
+        return;
+      }
+
       const cod = C.departamentosContraentrega.includes(data.departamento);
       const items = cart.map(i => { const p = bySlug(i.slug); return `• ${i.qty} × ${p.nombre}${i.pack ? " (Pack x2)" : ""} — ${money(linePrice(i))}`; }).join("\n");
-      const total = cartTotal();
       const msg = `Hola ${C.nombre}, quiero hacer este pedido:\n\nPedido: ${code}\n${items}\nTotal: ${money(total)}\nPago: ${cod ? "contraentrega" : "por coordinar (fuera de zona contraentrega)"}\n\nNombre: ${data.nombre}\nCelular: ${data.celular}\nDNI/CE: ${data.dni}\nDirección: ${data.direccion}, ${data.distrito}, ${data.departamento}\nReferencia: ${data.referencia}${data.notas ? `\nNotas: ${data.notas}` : ""}`;
-      postWebhook({ ...data, tipo: "pedido", codigo: code, fecha: new Date().toISOString(), total, pago: cod ? "contraentrega" : "coordinar", items: cart.map(i => ({ producto: bySlug(i.slug).nombre, dropiId: bySlug(i.slug).dropiId, pack: i.pack, cantidad: i.qty, subtotal: linePrice(i) })) });
+      postWebhook({ ...data, tipo: "pedido", codigo: code, fecha: new Date().toISOString(), total, pago: cod ? "contraentrega" : "coordinar", items: lines });
       track("Lead", { value: total, content_ids: cart.map(i => bySlug(i.slug).dropiId) });
       const url = waLink(msg);
-      store.set("vs_last_order", { code, url, total });
+      store.set("vs_last_order", { code, url, total, cel4: data.celular.slice(-4) });
       cart = []; saveCart();
       location.hash = "#/gracias";
       window.open(url, "_blank", "noopener");
     });
   }
 
+  /* ---------- Yape (Mercado Pago) ---------- */
+  let mpLoader = null;
+  function loadMP() {
+    if (window.MercadoPago) return Promise.resolve();
+    if (!mpLoader) mpLoader = new Promise((ok, fail) => { const s = document.createElement("script"); s.src = "https://sdk.mercadopago.com/js/v2"; s.onload = ok; s.onerror = () => { mpLoader = null; fail(new Error("sdk")); }; document.head.appendChild(s); });
+    return mpLoader;
+  }
+  async function yapeToken(phoneNumber, otp) {
+    await loadMP();
+    const mp = new window.MercadoPago(C.mpPublicKey, { locale: "es-PE" });
+    let t;
+    try { t = await mp.yape({ otp, phoneNumber }).create(); }
+    catch (err) { const e = new Error("El código de Yape no es válido o ya venció. Genera uno nuevo en tu app Yape e inténtalo otra vez."); e.yape = true; throw e; }
+    const id = t && (t.id || t.token || (typeof t === "string" ? t : ""));
+    if (!id) { const e = new Error("Yape no respondió. Genera un código nuevo e inténtalo otra vez."); e.yape = true; throw e; }
+    return id;
+  }
+  function yapeError(d) {
+    const m = {
+      cc_rejected_insufficient_amount: "Tu Yape no tiene saldo o límite suficiente para este monto.",
+      cc_amount_rate_limit_exceeded: "El monto supera tu límite de Yape. Puedes subir tu límite en la app o elegir contraentrega.",
+      cc_rejected_max_attempts: "Superaste el número de intentos. Espera unos minutos y genera un código nuevo.",
+      cc_rejected_call_for_authorize: "Yape necesita que autorices el pago. Revisa tu app.",
+      cc_rejected_card_type_not_allowed: "Este número no tiene Yape habilitado para compras online.",
+      cc_rejected_bad_filled_security_code: "El código de aprobación no es correcto o venció. Genera uno nuevo.",
+      cc_rejected_bad_filled_other: "El código de aprobación no es correcto o venció. Genera uno nuevo."
+    };
+    return (m[d] || "Yape rechazó el pago. Genera un código nuevo e inténtalo otra vez, o elige contraentrega.") + " No se hizo ningún cobro.";
+  }
+
   function viewThanks() {
     setTitle("¡Gracias por tu pedido!");
     const o = store.get("vs_last_order", null);
+    if (o && o.paid) {
+      main.innerHTML = `<div class="wrap thanks">
+        <div class="ok-icon">${ICON.check}</div>
+        <h1 style="font-size:clamp(2rem,5vw,2.8rem)">¡Pago recibido!</h1>
+        <p class="muted">Tu código de pedido es</p><p class="code">${esc(o.code)}</p>
+        <p class="muted">Pagaste <b>${money(o.total)}</b> con Yape. Ya estamos preparando tu pedido: te enviaremos un correo y un WhatsApp cuando salga a reparto, con tu número de guía.</p>
+        <a class="btn btn-gold" href="#/seguimiento/${esc(o.code)}">Ver estado de mi pedido</a>
+        <p style="margin-top:22px"><a class="muted" href="#/catalogo" style="text-decoration:underline">Seguir comprando</a></p>
+      </div>`;
+      return;
+    }
     main.innerHTML = `<div class="wrap thanks">
       <div class="ok-icon">${ICON.check}</div>
       <h1 style="font-size:clamp(2rem,5vw,2.8rem)">¡Pedido registrado!</h1>
       ${o ? `<p class="muted">Tu código de pedido es</p><p class="code">${esc(o.code)}</p>` : ""}
       <p class="muted">Si WhatsApp no se abrió, toca el botón para enviarnos tu pedido. Te responderemos para confirmar la entrega.</p>
-      ${o ? `<a class="btn btn-wa" href="${esc(o.url)}" target="_blank" rel="noopener">${ICON.wa} Enviar pedido por WhatsApp</a>` : ""}
+      ${o && o.url ? `<a class="btn btn-wa" href="${esc(o.url)}" target="_blank" rel="noopener">${ICON.wa} Enviar pedido por WhatsApp</a>` : ""}
       <p style="margin-top:22px"><a class="muted" href="#/catalogo" style="text-decoration:underline">Seguir comprando</a></p>
     </div>`;
+  }
+
+  /* ---------- seguimiento de pedido ---------- */
+  const PASOS = ["Pagado", "En Dropi", "Despachado", "Entregado"];
+  const PASO_TXT = { "Por confirmar": "Recibido, por confirmar", "Pagado": "Pago recibido", "Confirmado": "Confirmado", "En Dropi": "Preparando tu pedido", "Despachado": "En camino", "Entregado": "Entregado", "Novedad": "Con novedad: te contactaremos", "Devuelto": "Devuelto", "Rechazado": "No entregado", "Cancelado": "Cancelado", "Revisar": "Preparando tu pedido" };
+  function viewTracking(code) {
+    setTitle("Estado de mi pedido");
+    const last = store.get("vs_last_order", null);
+    const cel4 = last && last.code === code ? last.cel4 : "";
+    main.innerHTML = `<div class="wrap" style="max-width:640px">
+      <nav class="crumbs" aria-label="Ruta"><a href="#/">Inicio</a> / <span>Estado de mi pedido</span></nav>
+      <div class="panel">
+        <h1 style="font-size:clamp(1.6rem,4vw,2.2rem)">Estado de mi pedido</h1>
+        <form id="trkForm" class="form-grid two" novalidate>
+          <div class="field"><label for="t_code">Código de pedido</label><input id="t_code" name="code" value="${esc(code || "")}" placeholder="VS-261009-AB12" required></div>
+          <div class="field"><label for="t_cel">Últimos 4 dígitos de tu celular</label><input id="t_cel" name="cel" inputmode="numeric" maxlength="4" value="${esc(cel4 || "")}" required></div>
+          <button class="btn btn-gold btn-block" type="submit" style="grid-column:1/-1">Consultar</button>
+        </form>
+        <div id="trkOut" style="margin-top:18px"></div>
+      </div></div>`;
+    const f = $("#trkForm"), out = $("#trkOut");
+    const consultar = async () => {
+      const c = f.code.value.trim().toUpperCase(), d = f.cel.value.trim();
+      if (!/^VS-\d{6}-[A-Z0-9]{4}$/.test(c) || !/^\d{4}$/.test(d)) { out.innerHTML = `<div class="notice warn"><span>Revisa el código y los 4 dígitos.</span></div>`; return; }
+      out.innerHTML = `<p class="muted">Consultando…</p>`;
+      try {
+        const r = await (await fetch(`${C.sheetsWebhook}?accion=estado&codigo=${encodeURIComponent(c)}&cel=${d}`)).json();
+        if (!r.ok) { out.innerHTML = `<div class="notice warn"><span>No encontramos ese pedido. Si lo hiciste hace unos minutos, inténtalo en un rato o escríbenos por WhatsApp.</span></div>`; return; }
+        const idx = r.estado === "Revisar" ? 1 : PASOS.indexOf(r.estado === "Confirmado" ? "En Dropi" : r.estado);
+        out.innerHTML = `<p><b>${esc(r.codigo)}</b> · ${esc(r.productos)}</p>
+          <p class="track-now">${esc(PASO_TXT[r.estado] || r.estado)}</p>
+          ${idx >= 0 ? `<ol class="track">${PASOS.map((p, i) => `<li class="${i <= idx ? "done" : ""}">${esc(PASO_TXT[p])}</li>`).join("")}</ol>` : ""}
+          ${r.guia ? `<p>Guía: <b>${esc(r.guia)}</b>${r.transportadora ? ` · ${esc(r.transportadora)}` : ""}</p>` : ""}
+          <p class="small muted">¿Dudas? <a href="#" data-wa="Hola, consulto por mi pedido ${esc(r.codigo)}" style="text-decoration:underline">Escríbenos por WhatsApp</a></p>`;
+      } catch (e) { out.innerHTML = `<div class="notice warn"><span>No pudimos consultar ahora. Inténtalo de nuevo en un momento.</span></div>`; }
+    };
+    f.addEventListener("submit", e => { e.preventDefault(); consultar(); });
+    if (code && cel4) consultar();
   }
 
   function viewHowTo() {
@@ -635,6 +789,7 @@
     else if (parts[0] === "p") viewProduct(parts[1]);
     else if (parts[0] === "checkout") viewCheckout();
     else if (parts[0] === "gracias") viewThanks();
+    else if (parts[0] === "seguimiento") viewTracking(decodeURIComponent(parts[1] || ""));
     else if (parts[0] === "como-comprar") viewHowTo();
     else if (parts[0] === "preguntas") viewFaq();
     else if (parts[0] === "legal") viewLegal(parts[1]);
