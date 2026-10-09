@@ -381,10 +381,13 @@ body.has-sticky .wa-float{bottom:calc(84px + env(safe-area-inset-bottom))}
 #catChips::-webkit-scrollbar,.chips-sub::-webkit-scrollbar{display:none}
 
 /* ---------- pago con Yape y seguimiento ---------- */
+[hidden]{display:none!important}
 .pay-opts{display:grid;gap:10px}
 .yape-logo{background:#742284;color:#fff;border-radius:8px;padding:4px 10px;font-size:.95rem!important}
 .yape-box{border:1.5px dashed #9b4dca;border-radius:var(--radius-sm);padding:14px 16px;display:grid;gap:12px;background:rgba(116,34,132,.08)}
 .yape-steps{font-size:.9rem;line-height:1.5}
+.card-box{border-radius:var(--radius-sm);overflow:hidden}
+#cardBrick{min-height:120px}
 .btn:disabled{opacity:.6;cursor:wait}
 .track-now{font-family:Syne,Inter,system-ui,sans-serif;font-weight:800;font-size:1.35rem;color:var(--gold);margin:6px 0 10px}
 .track{list-style:none;padding:0;margin:0 0 14px;display:grid;gap:8px}
