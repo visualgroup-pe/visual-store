@@ -110,14 +110,14 @@
     <article class="card reveal">
       <a href="#/p/${p.slug}" class="img" aria-label="${esc(p.nombre)}">
         <img src="${esc(p.imagenes[0])}" alt="${esc(p.nombre)}" loading="lazy">
-        ${p.top ? `<span class="badge badge-fire">🔥 Top ${p.top}</span>` : p.destacado ? '<span class="badge">Destacado</span>' : ""}
+        ${p.flash ? `<span class="badge badge-flash">⚡ -${p.flashOff}% hoy</span>` : p.top ? `<span class="badge badge-fire">🔥 Top ${p.top}</span>` : p.destacado ? '<span class="badge">Destacado</span>' : ""}
         ${ahorro(p) ? `<span class="save-chip">Pack x2 −${money(ahorro(p))}</span>` : ""}
       </a>
       <div class="body">
         <span class="cat">${esc(p.categoria)}</span>
         <h3><a href="#/p/${p.slug}">${esc(p.nombre)}</a></h3>
-        <div class="price">${money(p.precio)}</div>
-        <div class="pack">Pack x2: ${money(p.precioPack)}</div>
+        <div class="price">${p.flash ? `<s class="was">${money(p.precioNormal)}</s> ` : ""}${money(p.precio)}</div>
+        <div class="pack">${p.flash ? `⚡ Termina en <span data-countdown>${window.VS_FLASH.left()}</span>` : `Pack x2: ${money(p.precioPack)}`}</div>
         <button class="btn btn-ghost add" data-add="${p.slug}">Agregar al carrito</button>
       </div>
     </article>`;
@@ -208,6 +208,7 @@
       </section>
       ${promoBand()}
       <div class="wrap">${trustBar()}</div>
+      ${flashSection()}
       ${topFive()}
       <section class="section">
         <div class="wrap">
@@ -246,36 +247,79 @@
     }));
   }
 
-  let currentCat = "Todos";
+  const CAT_ICON = { Todos: "🛍️", Tech: "🎧", Belleza: "✨", Bienestar: "💆", Hogar: "🏠", Mascotas: "🐾", Auto: "🚗", Herramientas: "🛠️", Juegos: "🧸", Moda: "👜" };
+  const CAT_LABEL = { Belleza: "Skincare y belleza" };
+  const F = { cat: "Todos", sub: "", q: "", sort: "rec", price: "", flash: false };
   let shown = 24;
-  let query = "";
   const norm = s => String(s).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-  const filtered = () => P.filter(p => (currentCat === "Todos" || p.categoria === currentCat) && (!query || norm(p.nombre + " " + p.categoria).includes(norm(query))));
-  const gridHTML = () => filtered().slice(0, shown).map(card).join("") || '<p class="muted">No encontramos productos con esa búsqueda.</p>';
+  const PRICE = { "": [0, 1e9], a: [0, 50], b: [50, 100], c: [100, 200], d: [200, 1e9] };
+  const base = () => P.filter(p => (!F.q || norm(p.nombre + " " + p.categoria + " " + (p.sub || "")).includes(norm(F.q))) && (!F.flash || p.flash) && p.precio >= PRICE[F.price][0] && p.precio < PRICE[F.price][1]);
+  const filtered = () => {
+    const list = base().filter(p => (F.cat === "Todos" || p.categoria === F.cat) && (!F.sub || p.sub === F.sub));
+    const by = { low: (x, y) => x.precio - y.precio, high: (x, y) => y.precio - x.precio, save: (x, y) => ((y.precioNormal || y.precio) - y.precio + ahorro(y)) - ((x.precioNormal || x.precio) - x.precio + ahorro(x)), az: (x, y) => x.nombre.localeCompare(y.nombre, "es") }[F.sort];
+    return by ? list.slice().sort(by) : list.slice().sort((x, y) => (y.flash ? 2 : 0) + (y.top ? 1 : 0) - (x.flash ? 2 : 0) - (x.top ? 1 : 0));
+  };
+  const gridHTML = () => filtered().slice(0, shown).map(card).join("") || `<div class="empty"><p><b>No encontramos productos con esos filtros.</b></p><button class="btn btn-ghost" type="button" data-reset>Limpiar filtros</button></div>`;
   const moreHTML = () => { const n = filtered().length; return n > shown ? `<div class="more-wrap"><button class="btn btn-gold" id="moreBtn" type="button">Ver más productos (${n - shown} más)</button></div>` : ""; };
+  const catChips = () => { const b = base(); const cats = ["Todos", ...new Set(P.map(p => p.categoria))]; return cats.map(c => { const n = c === "Todos" ? b.length : b.filter(p => p.categoria === c).length; return `<button class="chip" data-cat="${esc(c)}" aria-pressed="${c === F.cat}"${n ? "" : " disabled"}>${CAT_ICON[c] || ""} ${esc(CAT_LABEL[c] || c)} <span class="chip-n">${n}</span></button>`; }).join(""); };
+  const subChips = () => { if (F.cat === "Todos") return ""; const b = base().filter(p => p.categoria === F.cat); const subs = [...new Set(b.map(p => p.sub))].sort((x, y) => b.filter(p => p.sub === y).length - b.filter(p => p.sub === x).length); if (subs.length < 2) return ""; return `<button class="chip chip-sub" data-sub="" aria-pressed="${!F.sub}">Todo ${esc(CAT_LABEL[F.cat] || F.cat)}</button>` + subs.map(s => `<button class="chip chip-sub" data-sub="${esc(s)}" aria-pressed="${s === F.sub}">${esc(s)} <span class="chip-n">${b.filter(p => p.sub === s).length}</span></button>`).join(""); };
+  const countHTML = () => { const n = filtered().length; const active = F.cat !== "Todos" || F.sub || F.q || F.price || F.flash || F.sort !== "rec"; return `<b>${n}</b> producto${n === 1 ? "" : "s"}${active ? ' · <button type="button" class="linkish" data-reset>Limpiar filtros</button>' : ""}`; };
   function catalogBlock() {
     shown = 24;
-    return `<div class="cat-tools"><input type="search" id="catSearch" class="cat-search" placeholder="🔎 Buscar entre ${P.length} productos…" value="${esc(query)}" aria-label="Buscar productos"></div>
-      <div class="chips" role="group" aria-label="Filtrar por categoría">${CATS.map(c => `<button class="chip" data-cat="${esc(c)}" aria-pressed="${c === currentCat}">${esc(c)}</button>`).join("")}</div>
-      <div class="grid" id="catGrid" style="margin-top:18px">${gridHTML()}</div><div id="catMore">${moreHTML()}</div>`;
+    const flashN = P.filter(p => p.flash).length;
+    return `<div class="cat-tools">
+        <input type="search" id="catSearch" class="cat-search" placeholder="🔎 Buscar entre ${P.length} productos…" value="${esc(F.q)}" aria-label="Buscar productos">
+        <div class="cat-row">
+          <label class="sel"><span>Ordenar</span><select id="catSort"><option value="rec">Recomendados</option><option value="low">Precio: menor a mayor</option><option value="high">Precio: mayor a menor</option><option value="save">Mayor ahorro</option><option value="az">Nombre A–Z</option></select></label>
+          <label class="sel"><span>Precio</span><select id="catPrice"><option value="">Todos</option><option value="a">Hasta S/ 50</option><option value="b">S/ 50 – 100</option><option value="c">S/ 100 – 200</option><option value="d">Más de S/ 200</option></select></label>
+          ${flashN ? `<button type="button" class="chip chip-flash" id="catFlash" aria-pressed="${F.flash}">⚡ Ofertas de hoy <span class="chip-n">${flashN}</span></button>` : ""}
+        </div>
+      </div>
+      <div class="chips" id="catChips" role="group" aria-label="Categorías">${catChips()}</div>
+      <div class="chips chips-sub" id="subChips" role="group" aria-label="Subcategorías">${subChips()}</div>
+      <div class="cat-count" id="catCount" aria-live="polite">${countHTML()}</div>
+      <div class="grid" id="catGrid">${gridHTML()}</div><div id="catMore">${moreHTML()}</div>`;
   }
-  function refreshGrid() { $("#catGrid").innerHTML = gridHTML(); $("#catMore").innerHTML = moreHTML(); }
+  function refreshGrid(all) {
+    if (all) { $("#catChips").innerHTML = catChips(); $("#subChips").innerHTML = subChips(); }
+    $("#catCount").innerHTML = countHTML(); $("#catGrid").innerHTML = gridHTML(); $("#catMore").innerHTML = moreHTML();
+  }
   function bindCatalog() {
-    $$(".chip").forEach(b => b.addEventListener("click", () => {
-      currentCat = b.dataset.cat; shown = 24;
-      $$(".chip").forEach(x => x.setAttribute("aria-pressed", x.dataset.cat === currentCat));
-      refreshGrid();
-    }));
-    const s = $("#catSearch");
-    if (s) s.addEventListener("input", () => { query = s.value; shown = 24; refreshGrid(); });
-    const m = $("#catMore");
-    if (m) m.addEventListener("click", e => { if (e.target.closest("#moreBtn")) { shown += 24; refreshGrid(); } });
+    const wrap = $("#catGrid") && $("#catGrid").parentElement;
+    if (!wrap) return;
+    const sortEl = $("#catSort"), priceEl = $("#catPrice"), s = $("#catSearch");
+    sortEl.value = F.sort; priceEl.value = F.price;
+    wrap.addEventListener("click", e => {
+      const c = e.target.closest("[data-cat]"), sb = e.target.closest("[data-sub]");
+      if (c) { F.cat = c.dataset.cat; F.sub = ""; shown = 24; refreshGrid(true); return; }
+      if (sb) { F.sub = sb.dataset.sub; shown = 24; refreshGrid(true); return; }
+      if (e.target.closest("#catFlash")) { F.flash = !F.flash; e.target.closest("#catFlash").setAttribute("aria-pressed", F.flash); shown = 24; refreshGrid(true); return; }
+      if (e.target.closest("#moreBtn")) { shown += 24; refreshGrid(); return; }
+      if (e.target.closest("[data-reset]")) { Object.assign(F, { cat: "Todos", sub: "", q: "", sort: "rec", price: "", flash: false }); s.value = ""; sortEl.value = "rec"; priceEl.value = ""; const fb = $("#catFlash"); if (fb) fb.setAttribute("aria-pressed", false); shown = 24; refreshGrid(true); }
+    });
+    s.addEventListener("input", () => { F.q = s.value; shown = 24; refreshGrid(true); });
+    sortEl.addEventListener("change", () => { F.sort = sortEl.value; shown = 24; refreshGrid(); });
+    priceEl.addEventListener("change", () => { F.price = priceEl.value; shown = 24; refreshGrid(true); });
   }
+
+  const flashSection = () => {
+    const items = P.filter(p => p.flash);
+    if (!items.length) return "";
+    return `<section class="section flash" id="flash">
+        <div class="wrap">
+          <div class="flash-head">
+            <div><span class="eyebrow">⚡ Ofertas flash</span><h2>Precios especiales solo por hoy</h2><p class="muted">Cada día elegimos ${items.length} productos con descuento extra. Cuando el contador llega a cero, vuelven a su precio normal.</p></div>
+            <div class="countdown" role="timer" aria-label="Tiempo restante de las ofertas"><span>Terminan en</span><b data-countdown>${window.VS_FLASH.left()}</b><small>Hora de Lima</small></div>
+          </div>
+          <div class="grid">${items.map(card).join("")}</div>
+        </div>
+      </section>`;
+  };
 
   function viewCatalog() {
     setTitle("Catálogo");
     main.innerHTML = `<section class="section"><div class="wrap">
-      <div class="section-head"><div><span class="eyebrow">Catálogo</span><h1 style="font-size:clamp(2rem,4.5vw,3rem)">Tech útil para tu día a día</h1></div><p class="muted">Todos con envío gratis y pago contraentrega en Lima y ciudades principales.</p></div>
+      <div class="section-head"><div><span class="eyebrow">Catálogo</span><h1 style="font-size:clamp(2rem,4.5vw,3rem)">Todo el catálogo</h1></div><p class="muted">Filtra por categoría, precio u ofertas. Todos con envío gratis y pago contraentrega en Lima y ciudades principales.</p></div>
       ${catalogBlock()}</div></section>`;
     bindCatalog();
   }
@@ -286,7 +330,7 @@
     setTitle(p.nombre);
     track("ViewContent", { value: p.precio, content_ids: [p.dropiId], content_type: "product", content_name: p.nombre });
     const save = p.precio * 2 - p.precioPack;
-    const related = P.filter(x => x.slug !== p.slug && x.categoria === p.categoria).concat(P.filter(x => x.slug !== p.slug && x.categoria !== p.categoria)).slice(0, 4);
+    const related = P.filter(x => x.slug !== p.slug && x.sub === p.sub && x.categoria === p.categoria).concat(P.filter(x => x.slug !== p.slug && x.categoria === p.categoria && x.sub !== p.sub)).slice(0, 4);
     main.innerHTML = `
       <div class="wrap">
         <nav class="crumbs" aria-label="Ruta"><a href="#/">Inicio</a> / <a href="#/catalogo">Catálogo</a> / <span>${esc(p.nombre)}</span></nav>
@@ -299,7 +343,8 @@
             <span class="eyebrow">${esc(p.categoria)}</span>
             <h1>${esc(p.nombre)}</h1>
             <p class="muted" style="font-size:1.05rem">${esc(p.corto)}</p>
-            <div class="price-big" id="priceBig">${money(p.precio)}</div>
+            ${p.flash ? `<div class="pdp-flash">⚡ Oferta flash -${p.flashOff}% · termina en <b data-countdown>${window.VS_FLASH.left()}</b></div>` : ""}
+            <div class="price-big" id="priceBig">${money(p.precio)}</div>${p.flash ? `<div class="was-line">Precio normal <s>${money(p.precioNormal)}</s></div>` : ""}
             <div class="cod-note">${ICON.check.replace("<svg", '<svg width="18" height="18"')} Envío gratis · Pagas al recibir</div>
             <div class="options" role="radiogroup" aria-label="Elige tu opción">
               <label class="opt"><input type="radio" name="opt" value="1" checked><span class="t"><b>1 unidad</b><span>Ideal para ti</span></span><span class="p">${money(p.precio)}</span></label>
