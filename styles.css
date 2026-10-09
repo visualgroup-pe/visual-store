@@ -377,3 +377,5 @@ body.has-sticky .wa-float{bottom:calc(84px + env(safe-area-inset-bottom))}
 :root[data-theme="light"] .hero::before,:root[data-theme="light"] .hero::after{opacity:.35}
 :root[data-theme="light"] body{background:var(--bg)}
 @media(min-width:761px){.theme-btn{margin-left:8px}}
+#catChips,.chips-sub{scrollbar-width:none}
+#catChips::-webkit-scrollbar,.chips-sub::-webkit-scrollbar{display:none}
