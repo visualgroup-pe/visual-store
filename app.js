@@ -247,16 +247,29 @@
   }
 
   let currentCat = "Todos";
+  let shown = 24;
+  let query = "";
+  const norm = s => String(s).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  const filtered = () => P.filter(p => (currentCat === "Todos" || p.categoria === currentCat) && (!query || norm(p.nombre + " " + p.categoria).includes(norm(query))));
+  const gridHTML = () => filtered().slice(0, shown).map(card).join("") || '<p class="muted">No encontramos productos con esa búsqueda.</p>';
+  const moreHTML = () => { const n = filtered().length; return n > shown ? `<div class="more-wrap"><button class="btn btn-gold" id="moreBtn" type="button">Ver más productos (${n - shown} más)</button></div>` : ""; };
   function catalogBlock() {
-    return `<div class="chips" role="group" aria-label="Filtrar por categoría">${CATS.map(c => `<button class="chip" data-cat="${esc(c)}" aria-pressed="${c === currentCat}">${esc(c)}</button>`).join("")}</div>
-      <div class="grid" id="catGrid" style="margin-top:18px">${P.filter(p => currentCat === "Todos" || p.categoria === currentCat).map(card).join("")}</div>`;
+    shown = 24;
+    return `<div class="cat-tools"><input type="search" id="catSearch" class="cat-search" placeholder="🔎 Buscar entre ${P.length} productos…" value="${esc(query)}" aria-label="Buscar productos"></div>
+      <div class="chips" role="group" aria-label="Filtrar por categoría">${CATS.map(c => `<button class="chip" data-cat="${esc(c)}" aria-pressed="${c === currentCat}">${esc(c)}</button>`).join("")}</div>
+      <div class="grid" id="catGrid" style="margin-top:18px">${gridHTML()}</div><div id="catMore">${moreHTML()}</div>`;
   }
+  function refreshGrid() { $("#catGrid").innerHTML = gridHTML(); $("#catMore").innerHTML = moreHTML(); }
   function bindCatalog() {
     $$(".chip").forEach(b => b.addEventListener("click", () => {
-      currentCat = b.dataset.cat;
+      currentCat = b.dataset.cat; shown = 24;
       $$(".chip").forEach(x => x.setAttribute("aria-pressed", x.dataset.cat === currentCat));
-      $("#catGrid").innerHTML = P.filter(p => currentCat === "Todos" || p.categoria === currentCat).map(card).join("");
+      refreshGrid();
     }));
+    const s = $("#catSearch");
+    if (s) s.addEventListener("input", () => { query = s.value; shown = 24; refreshGrid(); });
+    const m = $("#catMore");
+    if (m) m.addEventListener("click", e => { if (e.target.closest("#moreBtn")) { shown += 24; refreshGrid(); } });
   }
 
   function viewCatalog() {
