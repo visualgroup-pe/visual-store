@@ -34,6 +34,11 @@ window.STORE_CONFIG = {
   // Déjalo vacío para usar solo WhatsApp. Instrucciones en LEEME.md.
   sheetsWebhook: "https://script.google.com/macros/s/AKfycbwwAc0KscVSyK543_PTHwBW5-GGG_yRL5V0LX8feHsjviYJGBoDiBElmRNYAh30UBQ/exec",
 
+  // Pago con Yape vía Mercado Pago: pega aquí tu PUBLIC KEY de producción (empieza con APP_USR-).
+  // Es pública por diseño. El Access Token (secreto) va SOLO en Propiedades del Apps Script.
+  // Vacío = la opción "Paga con Yape" no aparece.
+  mpPublicKey: "APP_USR-a9e338c9-4362-4897-9303-3831424c8da9",
+
   // (Opcional) IDs de píxeles publicitarios. Vacío = desactivado.
   metaPixelId: "",
   tiktokPixelId: "",
