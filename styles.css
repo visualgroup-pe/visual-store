@@ -306,3 +306,7 @@ body.has-sticky .wa-float{bottom:calc(84px + env(safe-area-inset-bottom))}
 @media(max-width:480px){.top-item{grid-template-columns:96px 1fr;gap:12px;padding:12px}.top-ctas .btn{flex:1 1 100%}.top-body h3{font-size:.98rem}}
 @media(prefers-reduced-motion:reduce){.promo-track,.btn-pulse{animation:none}}
 .promo-band + .wrap .trust{margin-top:22px}
+.cat-tools{margin-bottom:14px}
+.cat-search{width:100%;max-width:520px;min-height:48px;padding:0 18px;border-radius:999px;border:1px solid var(--border-hi);background:var(--bg-mid);color:var(--text);font-size:1rem}
+.cat-search:focus{outline:2px solid var(--gold);outline-offset:2px}
+.more-wrap{display:flex;justify-content:center;margin-top:24px}
