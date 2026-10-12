@@ -117,6 +117,7 @@
         <span class="cat">${esc(p.categoria)}</span>
         <h3><a href="#/p/${p.slug}">${esc(p.nombre)}</a></h3>
         <div class="price">${p.flash ? `<s class="was">${money(p.precioNormal)}</s> ` : ""}${money(p.precio)}</div>
+        <div class="ship">🚚 Envío gratis</div>
         <div class="pack">${p.flash ? `⚡ Termina en <span data-countdown>${window.VS_FLASH.left()}</span>` : `Pack x2: ${money(p.precioPack)}`}</div>
         <button class="btn btn-ghost add" data-add="${p.slug}">Agregar al carrito</button>
       </div>
@@ -128,7 +129,7 @@
     return `
       <section class="section top5" id="top5">
         <div class="wrap">
-          <div class="section-head"><div><span class="eyebrow">🔥 Lo más hot</span><h2>Top 5 <span class="grad-text">VISUAL</span></h2></div><p class="muted">Nuestros favoritos del momento. Pídelos hoy y paga recién cuando te llegan.</p></div>
+          <div class="section-head"><div><span class="eyebrow">🔥 Lo más hot</span><h2>Top 5 <span class="grad-text">VISUAL</span></h2></div><p class="muted">Nuestros favoritos del momento, con envío gratis a todo el Perú.</p></div>
           <ol class="top-list">${tops.map(p => `
             <li class="top-item reveal">
               <span class="rank" aria-label="Puesto ${p.top}">#${p.top}</span>
@@ -187,29 +188,13 @@
     const hero = P.find(p => p.top === 1) || P.find(p => p.destacado) || P[0];
     const featured = P.filter(p => p.destacado);
     main.innerHTML = `
-      <section class="hero">
-        <div class="wrap hero-grid">
-          <div class="reveal">
-            <span class="eyebrow">Tech útil · Hecho para tu día a día</span>
-            <h1>Gadgets que <span class="grad-text">entran por los ojos</span> y te hacen la vida más fácil.</h1>
-            <p class="lead">Tecnología, belleza, auto y mascotas: productos seleccionados para ti. Pides en un minuto, pagas seguro con Yape o tarjeta y te llega rápido a casa.</p>
-            <div class="hero-ctas">
-              <button class="btn btn-gold btn-pulse" type="button" data-scroll="top5">🔥 Ver el Top 5</button>
-              <a class="btn btn-ghost" href="#/catalogo">Ver todo el catálogo</a>
-            </div>
-          </div>
-          <a class="hero-card reveal" href="#/p/${hero.slug}">
-            <span class="tag">${hero.top ? "🔥 #1 del Top 5" : "Destacado"}</span>
-            <div class="img"><img src="${esc(hero.imagenes[0])}" alt="${esc(hero.nombre)}"></div>
-            <div class="row"><h3>${esc(hero.nombre)}</h3><b class="gold">${money(hero.precio)}</b></div>
-            <span class="hero-buy">Comprar ahora →</span>
-          </a>
-        </div>
-      </section>
+      ${heroCarousel()}
+      ${catTabs()}
       ${promoBand()}
       <div class="wrap">${trustBar()}</div>
       ${flashSection()}
       ${topFive()}
+      ${catSections()}
       <section class="section">
         <div class="wrap">
           <div class="section-head"><div><span class="eyebrow">Favoritos</span><h2>Destacados</h2></div><a class="btn btn-ghost" href="#/catalogo">Ver todo el catálogo</a></div>
@@ -241,6 +226,7 @@
         </div></div>
       </section>`;
     bindCatalog();
+    bindCarousel();
     main.querySelectorAll("[data-scroll]").forEach(b => b.addEventListener("click", () => {
       const el = document.getElementById(b.dataset.scroll);
       if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -315,6 +301,114 @@
         </div>
       </section>`;
   };
+
+  /* ---------- portada: campaña, carrusel, categorías y popup ---------- */
+  const CAMP = C.campana || {};
+  const campTime = () => {
+    if (!CAMP.nombre || !CAMP.inicio || !CAMP.fin) return null;
+    const now = Date.now(), ini = Date.parse(CAMP.inicio + "T00:00:00-05:00"), fin = Date.parse(CAMP.fin + "T23:59:59-05:00");
+    if (!ini || !fin || now > fin) return null;
+    return now < ini ? { fase: "pronto", hasta: ini } : { fase: "activa", hasta: fin };
+  };
+  const dhm = ms => {
+    const s = Math.max(0, Math.floor(ms / 1000)), d = Math.floor(s / 86400), h = Math.floor(s % 86400 / 3600), m = Math.floor(s % 3600 / 60);
+    const two = n => String(n).padStart(2, "0");
+    return d ? `${d}d ${two(h)}h ${two(m)}m` : `${two(h)}:${two(m)}:${two(s % 60)}`;
+  };
+  setInterval(() => { const ct = campTime(); document.querySelectorAll("[data-camp-countdown]").forEach(el => { el.textContent = ct ? dhm(ct.hasta - Date.now()) : "00:00:00"; }); }, 1000);
+  const goCatalog = (opts) => {
+    Object.assign(F, { cat: "Todos", sub: "", q: "", sort: "rec", price: "", flash: false }, opts || {});
+    if (location.hash === "#/catalogo") viewCatalog(); else location.hash = "#/catalogo";
+  };
+  const CAT_SUB = { Tech: "Gadgets y audio para tu día a día", Belleza: "Skincare, cabello y cuidado personal", Hogar: "Cocina, limpieza y orden en casa", Moda: "Accesorios, bolsos y más", Bienestar: "Masajes, descanso y deporte", Auto: "Todo para tu auto", Herramientas: "Para arreglar y crear", Juegos: "Diversión para los peques", Mascotas: "Para tu engreído" };
+  const catsBySize = () => [...new Set(P.map(p => p.categoria))].sort((a, b) => P.filter(p => p.categoria === b).length - P.filter(p => p.categoria === a).length);
+  const rank = p => (p.flash ? 3 : 0) + (p.top ? 2 : 0) + (p.destacado ? 1 : 0);
+
+  const heroCarousel = () => {
+    const flash = P.filter(p => p.flash);
+    const maxOff = Math.max(0, ...flash.map(p => p.flashOff || 0));
+    const packs = P.slice().sort((a, b) => ahorro(b) - ahorro(a)).slice(0, 3);
+    const top = P.find(p => p.top === 1) || P[0];
+    const imgs = (arr, cls) => `<div class="hs-imgs ${cls || ""}">${arr.slice(0, 3).map(p => `<img src="${esc(p.imagenes[0])}" alt="" loading="lazy">`).join("")}</div>`;
+    const ct = campTime();
+    const slides = [];
+    if (ct) slides.push(`<div class="hs hs-camp"><div class="hs-txt"><span class="hs-kicker">${ct.fase === "pronto" ? "Se viene" : "¡Ya empezó!"}</span><h2 class="hs-big">${esc(CAMP.nombre)}</h2><p>${esc(CAMP.texto || "Los mejores precios del año en tecnología, belleza y hogar.")}</p><div class="hs-count"><span>${ct.fase === "pronto" ? "Empieza en" : "Termina en"}</span><b data-camp-countdown>${dhm(ct.hasta - Date.now())}</b></div><button class="btn btn-gold" type="button" data-gocat="Todos">${ct.fase === "pronto" ? "Ver productos" : "Ver ofertas"}</button></div>${imgs(packs)}</div>`);
+    if (flash.length) slides.push(`<div class="hs hs-flash"><div class="hs-txt"><span class="hs-kicker">⚡ Ofertas flash · solo hoy</span><span class="hs-pre">Hasta</span><h2 class="hs-big">−${maxOff}%</h2><p>${flash.length} productos con precio especial hasta la medianoche.</p><div class="hs-count"><span>Terminan en</span><b data-countdown>${window.VS_FLASH.left()}</b></div><button class="btn btn-gold" type="button" data-scroll="flash">Ver ofertas de hoy</button></div>${imgs(flash)}</div>`);
+    if (ahorro(packs[0])) slides.push(`<div class="hs hs-pack"><div class="hs-txt"><span class="hs-kicker">🔥 Packs x2</span><h2 class="hs-big">Lleva 2<br>y ahorra</h2><p>Hasta <b>${money(ahorro(packs[0]))}</b> de ahorro llevando dos unidades.</p><button class="btn btn-gold" type="button" data-gocat="Todos" data-sort="save">Ver packs con más ahorro</button></div>${imgs(packs)}</div>`);
+    slides.push(`<div class="hs hs-top"><div class="hs-txt"><span class="hs-kicker">🏆 El más pedido</span><h2 class="hs-name">${esc(top.nombre)}</h2><p class="hs-price">${money(top.precio)} <small>o 2 por ${money(top.precioPack)}</small></p><a class="btn btn-gold" href="#/p/${top.slug}">Comprar ahora</a></div><div class="hs-imgs hs-one"><img src="${esc(top.imagenes[0])}" alt="${esc(top.nombre)}"></div></div>`);
+    slides.push(`<div class="hs hs-pay"><div class="hs-txt"><span class="hs-kicker">💳 Paga como quieras</span><h2 class="hs-big">Yape o tarjeta</h2><p>Hasta 12 cuotas con tarjeta · Envío gratis a todo el Perú · Garantía de ${C.garantiaDias} días.</p><button class="btn btn-gold" type="button" data-gocat="Todos">Ver el catálogo</button></div><div class="hs-icons" aria-hidden="true"><span>💜</span><span>💳</span><span>🚚</span></div></div>`);
+    return `<section class="hero-car" aria-roledescription="carrusel" aria-label="Promociones">
+      <div class="hc-track">${slides.map((s, i) => `<div class="hc-slide" role="group" aria-roledescription="diapositiva" aria-label="${i + 1} de ${slides.length}"${i ? ' aria-hidden="true"' : ""}>${s}</div>`).join("")}</div>
+      ${slides.length > 1 ? `<button class="hc-nav hc-prev" type="button" aria-label="Promoción anterior">‹</button><button class="hc-nav hc-next" type="button" aria-label="Promoción siguiente">›</button>
+      <div class="hc-dots">${slides.map((_, i) => `<button type="button" aria-label="Ir a la promoción ${i + 1}"${i ? "" : ' aria-current="true"'}></button>`).join("")}</div>` : ""}
+    </section>`;
+  };
+  function bindCarousel() {
+    const car = $(".hero-car"); if (!car) return;
+    const track = car.querySelector(".hc-track"), slides = [...car.querySelectorAll(".hc-slide")], dots = [...car.querySelectorAll(".hc-dots button")];
+    if (slides.length < 2) return;
+    let i = 0, timer = null;
+    const go = n => {
+      i = (n + slides.length) % slides.length;
+      track.style.transform = `translateX(${-i * 100}%)`;
+      slides.forEach((s, k) => s.setAttribute("aria-hidden", k === i ? "false" : "true"));
+      dots.forEach((d, k) => d.toggleAttribute("aria-current", k === i));
+    };
+    const play = () => { stop(); if (!matchMedia("(prefers-reduced-motion: reduce)").matches) timer = setInterval(() => { if (!document.body.contains(car)) return stop(); go(i + 1); }, 5500); };
+    const stop = () => { if (timer) clearInterval(timer); timer = null; };
+    car.querySelector(".hc-prev").addEventListener("click", () => { go(i - 1); play(); });
+    car.querySelector(".hc-next").addEventListener("click", () => { go(i + 1); play(); });
+    dots.forEach((d, k) => d.addEventListener("click", () => { go(k); play(); }));
+    car.addEventListener("mouseenter", stop); car.addEventListener("mouseleave", play);
+    car.addEventListener("focusin", stop); car.addEventListener("focusout", play);
+    let x0 = null;
+    car.addEventListener("touchstart", e => { x0 = e.touches[0].clientX; stop(); }, { passive: true });
+    car.addEventListener("touchend", e => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 40) go(i + (dx < 0 ? 1 : -1)); x0 = null; play(); });
+    play();
+  }
+  const catTabs = () => `<nav class="cat-tabs" aria-label="Categorías"><div class="wrap cat-tabs-in">
+      ${P.some(p => p.flash) ? `<button type="button" class="ct ct-hot" data-scroll="flash">⚡ Ofertas de hoy</button>` : ""}
+      ${catsBySize().map(c => `<button type="button" class="ct" data-gocat="${esc(c)}">${CAT_ICON[c] || ""} ${esc(CAT_LABEL[c] || c)}</button>`).join("")}
+    </div></nav>`;
+  const catSections = () => catsBySize().slice(0, 4).map(c => {
+    const all = P.filter(p => p.categoria === c);
+    const items = all.slice().sort((a, b) => rank(b) - rank(a)).slice(0, 12);
+    return `<section class="section cat-sec"><div class="wrap">
+        <div class="cs-head"><div><h2>${esc(CAT_LABEL[c] || c)}<span class="gold">.</span></h2><p class="muted">${esc(CAT_SUB[c] || "")}</p></div><button type="button" class="cs-all" data-gocat="${esc(c)}">Ver todo (${all.length}) →</button></div>
+        <div class="rail">${items.map(card).join("")}</div>
+      </div></section>`;
+  }).join("");
+
+  function promoPopup() {
+    try { if (localStorage.getItem("vs-pop") === new Date().toDateString()) return; } catch (e) { /* sin almacenamiento */ }
+    setTimeout(() => {
+      if (/checkout|gracias|seguimiento|reclamaciones|legal/.test(location.hash)) return;
+      if (document.querySelector(".drawer.open, .pop")) return;
+      const flash = P.filter(p => p.flash); if (!flash.length) return;
+      const maxOff = Math.max(0, ...flash.map(p => p.flashOff || 0));
+      const el = document.createElement("div");
+      el.className = "pop"; el.setAttribute("role", "dialog"); el.setAttribute("aria-modal", "true"); el.setAttribute("aria-label", "Ofertas de hoy");
+      el.innerHTML = `<div class="pop-box">
+          <button class="pop-x" type="button" aria-label="Cerrar">×</button>
+          <span class="hs-kicker">⚡ Solo por hoy</span>
+          <h2 class="pop-big"><small>hasta</small> −${maxOff}%</h2>
+          <p class="muted" style="margin:0">En ${flash.length} productos seleccionados. Envío gratis y pago con Yape o tarjeta.</p>
+          <div class="pop-imgs">${flash.slice(0, 3).map(p => `<a href="#/p/${p.slug}" data-popclose><img src="${esc(p.imagenes[0])}" alt="${esc(p.nombre)}"><b>${money(p.precio)}</b></a>`).join("")}</div>
+          <div class="hs-count"><span>Terminan en</span><b data-countdown>${window.VS_FLASH.left()}</b></div>
+          <button class="btn btn-gold btn-block" type="button" data-popgo>Ver las ofertas de hoy</button>
+          <button class="linkish pop-later" type="button" data-popclose>Ahora no</button>
+        </div>`;
+      const onKey = e => { if (e.key === "Escape") close(); };
+      const close = () => { el.remove(); document.removeEventListener("keydown", onKey); try { localStorage.setItem("vs-pop", new Date().toDateString()); } catch (e) { /* nada */ } };
+      el.addEventListener("click", e => {
+        if (e.target.closest("[data-popgo]")) { close(); goCatalog({ flash: true }); return; }
+        if (e.target === el || e.target.closest(".pop-x, [data-popclose]")) close();
+      });
+      document.addEventListener("keydown", onKey);
+      document.body.appendChild(el);
+      el.querySelector(".pop-x").focus();
+    }, 8000);
+  }
 
   function viewCatalog() {
     setTitle("Catálogo");
@@ -849,6 +943,8 @@
 
   /* ---------- eventos globales ---------- */
   document.addEventListener("click", e => {
+    const gc = e.target.closest("[data-gocat]");
+    if (gc) { e.preventDefault(); goCatalog({ cat: gc.dataset.gocat, sort: gc.dataset.sort || "rec" }); return; }
     const add = e.target.closest("[data-add]");
     if (add) { e.preventDefault(); addToCart(add.dataset.add, false); return; }
     const wa = e.target.closest("[data-wa]");
@@ -865,7 +961,14 @@
   $("#legalLine").innerHTML = `<span>© ${new Date().getFullYear()} ${esc(C.nombre)}</span><span>Titular: ${esc(C.titular)}</span><span>RUC: ${esc(C.ruc)}</span><span>${esc(C.direccion)}</span>`;
   window.addEventListener("hashchange", route);
 
+  const navSearch = $("#navSearch");
+  if (navSearch) navSearch.addEventListener("submit", e => { e.preventDefault(); const q = navSearch.q.value.trim(); goCatalog({ q }); navSearch.q.blur(); });
+  const setNavH = () => document.documentElement.style.setProperty("--nav-h", ($(".nav") ? $(".nav").offsetHeight : 68) + "px");
+  window.addEventListener("resize", setNavH);
+
   loadPixels();
   renderCartBadge();
   route();
+  setNavH();
+  promoPopup();
 })();
