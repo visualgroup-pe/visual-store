@@ -39,6 +39,15 @@ window.STORE_CONFIG = {
   // Vacío = la opción "Paga con Yape" no aparece.
   mpPublicKey: "APP_USR-a9e338c9-4362-4897-9303-3831424c8da9",
 
+  // Campaña de temporada (aparece en el carrusel de portada con cuenta regresiva).
+  // Fechas en formato AAAA-MM-DD (hora de Lima). Vacío = no se muestra.
+  campana: {
+    nombre: "",        // ej.: "Cyber VISUAL"
+    inicio: "",        // ej.: "2026-11-09"
+    fin: "",           // ej.: "2026-11-12"
+    texto: ""          // ej.: "Los mejores precios del año en tecnología, belleza y hogar."
+  },
+
   // (Opcional) IDs de píxeles publicitarios. Vacío = desactivado.
   metaPixelId: "",
   tiktokPixelId: "",
