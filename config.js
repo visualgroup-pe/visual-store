@@ -42,10 +42,10 @@ window.STORE_CONFIG = {
   // Campaña de temporada (aparece en el carrusel de portada con cuenta regresiva).
   // Fechas en formato AAAA-MM-DD (hora de Lima). Vacío = no se muestra.
   campana: {
-    nombre: "",        // ej.: "Cyber VISUAL"
-    inicio: "",        // ej.: "2026-11-09"
-    fin: "",           // ej.: "2026-11-12"
-    texto: ""          // ej.: "Los mejores precios del año en tecnología, belleza y hogar."
+    nombre: "Cyber VISUAL",
+    inicio: "2026-11-02",
+    fin: "2026-11-05",
+    texto: "4 días con los mejores precios del año en tecnología, belleza y hogar."
   },
 
   // (Opcional) IDs de píxeles publicitarios. Vacío = desactivado.
