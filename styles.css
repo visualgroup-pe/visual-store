@@ -386,6 +386,8 @@ body.has-sticky .wa-float{bottom:calc(84px + env(safe-area-inset-bottom))}
 .yape-logo{background:#742284;color:#fff;border-radius:8px;padding:4px 10px;font-size:.95rem!important}
 .yape-box{border:1.5px dashed #9b4dca;border-radius:var(--radius-sm);padding:14px 16px;display:grid;gap:12px;background:rgba(116,34,132,.08)}
 .yape-steps{font-size:.9rem;line-height:1.5}
+.yape-how{margin:0;padding-left:20px;font-size:.92rem;line-height:1.7}
+.otp-field input{font-size:1.7rem;letter-spacing:.45em;text-align:center;font-weight:800;padding:12px}
 .card-box{border-radius:var(--radius-sm);overflow:hidden}
 #cardBrick{min-height:120px}
 .btn:disabled{opacity:.6;cursor:wait}
