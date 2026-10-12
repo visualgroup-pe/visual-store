@@ -433,12 +433,11 @@
               <div class="fieldset-title">Forma de pago</div>
               <div class="pay-opts" id="payOpts"></div>
               <div class="yape-box" id="yapeBox" hidden>
-                <div class="yape-steps"><b>Cómo pagar:</b> abre tu app Yape → menú → <b>Código de aprobación</b>. Copia el código de 6 dígitos y escríbelo aquí (vence en unos minutos).</div>
-                <div class="form-grid two">
-                  <div class="field"><label for="f_ycel">Celular con Yape</label><input id="f_ycel" name="yapeCel" type="tel" inputmode="numeric" placeholder="9XX XXX XXX" autocomplete="off"><span class="err">Ingresa el celular de 9 dígitos de tu Yape.</span></div>
-                  <div class="field"><label for="f_otp">Código de aprobación</label><input id="f_otp" name="otp" type="text" inputmode="numeric" maxlength="6" placeholder="6 dígitos" autocomplete="one-time-code"><span class="err">El código tiene 6 dígitos.</span></div>
-                </div>
-                <p class="small muted" style="margin:0">Pago seguro procesado por Mercado Pago. Tu límite diario de Yape debe cubrir el total.</p>
+                <ol class="yape-how"><li>Abre <b>Yape</b> en tu celular.</li><li>Toca <b>Código de aprobación</b> y copia los 6 dígitos.</li><li>Pégalos aquí: el pago se hace solo.</li></ol>
+                <div class="field otp-field"><label for="f_otp">Código de aprobación de Yape</label><input id="f_otp" name="otp" type="text" inputmode="numeric" maxlength="6" placeholder="••••••" autocomplete="one-time-code"><span class="err">El código tiene 6 dígitos.</span></div>
+                <p class="small muted" style="margin:0">Se cobra al Yape del <b id="yNum">celular que pusiste arriba</b>. <a href="#" class="linkish" id="yChange">¿Tu Yape está en otro número?</a></p>
+                <div class="field" id="yCelField" hidden><label for="f_ycel">Celular con Yape</label><input id="f_ycel" name="yapeCel" type="tel" inputmode="numeric" placeholder="9XX XXX XXX" autocomplete="off"><span class="err">Ingresa el celular de 9 dígitos de tu Yape.</span></div>
+                <p class="small muted" style="margin:0">Pago seguro con Mercado Pago. El código vence en unos minutos.</p>
               </div>
               <div class="card-box" id="cardBox" hidden><div id="cardBrick"></div></div>
               <div id="payMsg"></div>
@@ -467,6 +466,19 @@
       ? `<label class="opt"><input type="radio" name="pago" value="yape" checked><span class="t"><b>Yape</b><span>Con tu celular y el código de aprobación de tu app.</span></span><span class="p yape-logo">Yape</span></label>
          <label class="opt"><input type="radio" name="pago" value="tarjeta"><span class="t"><b>Tarjeta de crédito o débito</b><span>Visa, Mastercard, American Express y Diners.</span></span><span class="p">💳</span></label>`
       : `<div class="notice warn"><span>Los pagos en línea no están disponibles en este momento. Escríbenos por WhatsApp para comprar.</span></div>`;
+    const syncYapeNum = () => {
+      if (!$("#yCelField").hidden) return;
+      const c = form.celular.value.replace(/\D/g, "").replace(/^51(?=9\d{8}$)/, "");
+      form.yapeCel.value = c;
+      $("#yNum").textContent = /^9\d{8}$/.test(c) ? `celular ${c.slice(0, 3)} ${c.slice(3, 6)} ${c.slice(6)}` : "celular que pusiste arriba";
+    };
+    form.celular.addEventListener("input", syncYapeNum);
+    $("#yChange").addEventListener("click", e => { e.preventDefault(); $("#yCelField").hidden = false; form.yapeCel.value = ""; $("#yChange").closest("p").hidden = true; form.yapeCel.focus(); });
+    form.otp.addEventListener("input", () => {
+      const v = form.otp.value.replace(/\D/g, "").slice(0, 6);
+      if (v !== form.otp.value) form.otp.value = v;
+      if (v.length === 6 && method() === "yape") form.requestSubmit();
+    });
     const sync = () => {
       const m = method(), y = m === "yape", t = m === "tarjeta";
       $("#yapeBox").hidden = !y;
@@ -478,7 +490,7 @@
       $("#payHint").textContent = "Al pagar, tu pedido queda confirmado al instante.";
       $("#totLbl").textContent = "Total a pagar";
       $("#sumNote").textContent = `Pago protegido por Mercado Pago. Garantía de ${C.garantiaDias} días.`;
-      if (y && !form.yapeCel.value && form.celular.value) form.yapeCel.value = form.celular.value;
+      syncYapeNum();
       if (t) mountCard();
       payMsg("");
     };
@@ -568,6 +580,7 @@
     form.addEventListener("submit", async e => {
       e.preventDefault();
       if (busy || method() !== "yape") return;
+      syncYapeNum();
       const data = validar();
       if (!data) return;
       busy = true; const btn = $("#payBtn"); btn.disabled = true; btn.textContent = "Procesando pago…"; payMsg("");
