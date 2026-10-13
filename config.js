@@ -27,7 +27,7 @@ window.STORE_CONFIG = {
     "Lambayeque", "Piura", "Ica", "Junín", "Áncash", "Cusco"
   ],
 
-  tiempoEntrega: "24 a 72 horas en Lima y ciudades principales",
+  tiempoEntrega: "24 a 72 horas hábiles en Lima Metropolitana y Callao",
   garantiaDias: 30,
 
   // (Opcional) URL de un Google Apps Script para guardar pedidos y reclamos en Google Sheets.
