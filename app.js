@@ -13,6 +13,30 @@
 
   const DEPARTAMENTOS = ["Lima Metropolitana", "Callao", "Lima Provincias", "Amazonas", "Áncash", "Apurímac", "Arequipa", "Ayacucho", "Cajamarca", "Cusco", "Huancavelica", "Huánuco", "Ica", "Junín", "La Libertad", "Lambayeque", "Loreto", "Madre de Dios", "Moquegua", "Pasco", "Piura", "Puno", "San Martín", "Tacna", "Tumbes", "Ucayali"];
   const CATS = ["Todos", ...new Set(P.map(p => p.categoria))];
+  /* Por ahora solo enviamos a Lima Metropolitana y Callao */
+  const ZONAS = {
+    "Lima Metropolitana": ["Ancón", "Ate", "Barranco", "Breña", "Carabayllo", "Cercado de Lima", "Chaclacayo", "Chorrillos", "Cieneguilla", "Comas", "El Agustino", "Independencia", "Jesús María", "La Molina", "La Victoria", "Lince", "Los Olivos", "Lurigancho-Chosica", "Lurín", "Magdalena del Mar", "Miraflores", "Pachacámac", "Pucusana", "Pueblo Libre", "Puente Piedra", "Punta Hermosa", "Punta Negra", "Rímac", "San Bartolo", "San Borja", "San Isidro", "San Juan de Lurigancho", "San Juan de Miraflores", "San Luis", "San Martín de Porres", "San Miguel", "Santa Anita", "Santa María del Mar", "Santa Rosa", "Santiago de Surco", "Surquillo", "Villa El Salvador", "Villa María del Triunfo"],
+    "Callao": ["Callao", "Bellavista", "Carmen de la Legua Reynoso", "La Perla", "La Punta", "Mi Perú", "Ventanilla"]
+  };
+  /* Pasos que ve el cliente (igual que en los correos) */
+  const PASOS = ["Pedido recibido", "En preparación", "En camino", "Entregado"];
+  const PASO_DE = { "Por confirmar": 0, "Pagado": 0, "Enviar a Dropi": 0, "Revisar": 0, "Confirmado": 1, "En Dropi": 1, "Despachado": 2, "Novedad": 2, "Entregado": 3 };
+  const ESTADO_TXT = {
+    "Pagado": ["Pedido recibido", "Ya tenemos tu pedido y tu pago. Lo estamos alistando para enviarlo."],
+    "Enviar a Dropi": ["Pedido recibido", "Ya tenemos tu pedido y tu pago. Lo estamos alistando para enviarlo."],
+    "Por confirmar": ["Pedido recibido", "Estamos confirmando tu pedido."],
+    "Revisar": ["Pedido recibido", "Estamos validando tu pago o algún dato de entrega. Si hace falta algo, te escribimos."],
+    "Confirmado": ["En preparación", "Tu pedido se está empacando. Te avisamos por correo cuando salga a reparto."],
+    "En Dropi": ["En preparación", "Tu pedido se está empacando. Te avisamos por correo cuando salga a reparto."],
+    "Despachado": ["En camino", "Tu pedido ya salió a reparto. Ten a mano tu DNI para recibirlo."],
+    "Novedad": ["En camino, con una novedad", "El courier reportó una novedad con la entrega. Te contactaremos; si quieres, escríbenos por WhatsApp."],
+    "Entregado": ["Entregado", "¡Tu pedido fue entregado! Gracias por comprar en VISUAL Store."],
+    "Devuelto": ["Devuelto", "El pedido regresó a nuestro almacén. Escríbenos por WhatsApp para coordinar."],
+    "Rechazado": ["No entregado", "No se pudo completar la entrega. Escríbenos por WhatsApp para coordinar."],
+    "Cancelado": ["Cancelado", "Este pedido fue cancelado. Si pagaste, te devolvemos el íntegro por el mismo medio de pago."]
+  };
+  const timeline = idx => `<ol class="tl">${PASOS.map((p, i) => `<li class="${i < idx ? "done" : i === idx ? "now" : ""}"><span class="dot">${i < idx ? "✓" : i + 1}</span><span class="lbl">${p}</span></li>`).join("")}</ol>`;
+  const maskMail = m => { const [u, d] = String(m || "").split("@"); return d ? `${u.slice(0, 2)}${"•".repeat(Math.max(2, u.length - 2))}@${d}` : ""; };
 
   const ICON = {
     cash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2.5"/><circle cx="12" cy="12" r="2.6"/><path d="M6 10v4M18 10v4"/></svg>',
@@ -129,7 +153,7 @@
     return `
       <section class="section top5" id="top5">
         <div class="wrap">
-          <div class="section-head"><div><span class="eyebrow">🔥 Lo más hot</span><h2>Top 5 <span class="grad-text">VISUAL</span></h2></div><p class="muted">Nuestros favoritos del momento, con envío gratis a todo el Perú.</p></div>
+          <div class="section-head"><div><span class="eyebrow">🔥 Lo más hot</span><h2>Top 5 <span class="grad-text">VISUAL</span></h2></div><p class="muted">Nuestros favoritos del momento, con envío gratis a todo Lima.</p></div>
           <ol class="top-list">${tops.map(p => `
             <li class="top-item reveal">
               <span class="rank" aria-label="Puesto ${p.top}">#${p.top}</span>
@@ -174,11 +198,11 @@
 
   const FAQ = [
     ["¿Cómo pago?", "Aquí mismo en la web, con Yape (tu celular y el código de aprobación de tu app) o con tarjeta de crédito o débito. El pago lo procesa Mercado Pago y se confirma al instante."],
-    ["¿Cuánto demora el envío?", `Entre ${C.tiempoEntrega}. Cuando tu pedido sale a reparto te avisamos por correo con tu número de guía.`],
+    ["¿Cuánto demora el envío?", `Llega en ${C.tiempoEntrega}. Cuando tu pedido sale a reparto te avisamos por correo con tu número de guía.`],
     ["¿Cuánto cuesta el envío?", "El envío es gratis. El precio que ves es el precio final."],
-    ["¿Envían a todo el Perú?", "Sí, enviamos a todo el Perú con couriers nacionales. En zonas alejadas el plazo puede ser un poco mayor."],
+    ["¿Envían a provincias?", "Por ahora enviamos a Lima Metropolitana y Callao, con envío gratis. Muy pronto llegaremos a provincias: escríbenos por WhatsApp y te avisamos apenas esté disponible en tu ciudad."],
     ["¿Qué pasa si el producto llega con fallas?", `Tienes ${C.garantiaDias} días de garantía por fallas de fábrica. Escríbenos por WhatsApp con una foto o video y lo cambiamos.`],
-    ["¿Cómo sé que mi pedido fue recibido?", "Al pagar ves la confirmación con tu código de pedido y te llega un correo. Puedes ver el estado cuando quieras en la página Estado de mi pedido."]
+    ["¿Cómo sé que mi pedido fue recibido?", "Apenas pagas te llega un correo de VISUAL Store confirmando que recibimos tu pedido, con tu código. Después te escribimos cuando lo estemos preparando, cuando salga a reparto (con tu número de guía) y cuando se entregue. También puedes verlo cuando quieras en «Estado de mi pedido», en el menú."]
   ];
   const faqHTML = () => `<div class="faq">${FAQ.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join("")}</div>`;
 
@@ -336,7 +360,7 @@
     if (flash.length) slides.push(`<div class="hs hs-flash"><div class="hs-txt"><span class="hs-kicker">⚡ Ofertas flash · solo hoy</span><span class="hs-pre">Hasta</span><h2 class="hs-big">−${maxOff}%</h2><p>${flash.length} productos con precio especial hasta la medianoche.</p><div class="hs-count"><span>Terminan en</span><b data-countdown>${window.VS_FLASH.left()}</b></div><button class="btn btn-gold" type="button" data-scroll="flash">Ver ofertas de hoy</button></div>${imgs(flash)}</div>`);
     if (ahorro(packs[0])) slides.push(`<div class="hs hs-pack"><div class="hs-txt"><span class="hs-kicker">🔥 Packs x2</span><h2 class="hs-big">Lleva 2<br>y ahorra</h2><p>Hasta <b>${money(ahorro(packs[0]))}</b> de ahorro llevando dos unidades.</p><button class="btn btn-gold" type="button" data-gocat="Todos" data-sort="save">Ver packs con más ahorro</button></div>${imgs(packs)}</div>`);
     slides.push(`<div class="hs hs-top"><div class="hs-txt"><span class="hs-kicker">🏆 El más pedido</span><h2 class="hs-name">${esc(top.nombre)}</h2><p class="hs-price">${money(top.precio)} <small>o 2 por ${money(top.precioPack)}</small></p><a class="btn btn-gold" href="#/p/${top.slug}">Comprar ahora</a></div><div class="hs-imgs hs-one"><img src="${esc(top.imagenes[0])}" alt="${esc(top.nombre)}"></div></div>`);
-    slides.push(`<div class="hs hs-pay"><div class="hs-txt"><span class="hs-kicker">💳 Paga como quieras</span><h2 class="hs-big">Yape o tarjeta</h2><p>Hasta 12 cuotas con tarjeta · Envío gratis a todo el Perú · Garantía de ${C.garantiaDias} días.</p><button class="btn btn-gold" type="button" data-gocat="Todos">Ver el catálogo</button></div><div class="hs-icons" aria-hidden="true"><span>💜</span><span>💳</span><span>🚚</span></div></div>`);
+    slides.push(`<div class="hs hs-pay"><div class="hs-txt"><span class="hs-kicker">💳 Paga como quieras</span><h2 class="hs-big">Yape o tarjeta</h2><p>Hasta 12 cuotas con tarjeta · Envío gratis a todo Lima y Callao · Garantía de ${C.garantiaDias} días.</p><button class="btn btn-gold" type="button" data-gocat="Todos">Ver el catálogo</button></div><div class="hs-icons" aria-hidden="true"><span>💜</span><span>💳</span><span>🚚</span></div></div>`);
     return `<section class="hero-car" aria-roledescription="carrusel" aria-label="Promociones">
       <div class="hc-track">${slides.map((s, i) => `<div class="hc-slide" role="group" aria-roledescription="diapositiva" aria-label="${i + 1} de ${slides.length}"${i ? ' aria-hidden="true"' : ""}>${s}</div>`).join("")}</div>
       ${slides.length > 1 ? `<button class="hc-nav hc-prev" type="button" aria-label="Promoción anterior">‹</button><button class="hc-nav hc-next" type="button" aria-label="Promoción siguiente">›</button>
@@ -501,6 +525,7 @@
     main.innerHTML = `
       <div class="wrap">
         <nav class="crumbs" aria-label="Ruta"><a href="#/">Inicio</a> / <span>Finalizar pedido</span></nav>
+        <ol class="co-steps" id="coSteps" aria-label="Pasos de la compra"><li class="done"><span>✓</span>Carrito</li><li class="now" data-s="datos"><span>2</span>Datos</li><li data-s="pago"><span>3</span>Pago</li><li><span>4</span>¡Listo!</li></ol>
         <div class="checkout">
           <form class="panel" id="orderForm" novalidate>
             <h1 style="font-size:clamp(1.7rem,4vw,2.3rem)">Finaliza tu pedido</h1>
@@ -512,13 +537,14 @@
                 <div class="field"><label for="f_cel">Celular (WhatsApp)</label><input id="f_cel" name="celular" type="tel" inputmode="numeric" autocomplete="tel" placeholder="9XX XXX XXX" required value="${esc(saved.celular)}"><span class="err">Ingresa un celular de 9 dígitos que empiece con 9.</span></div>
               </div>
               <div class="form-grid two">
-                <div class="field"><label for="f_email">Correo</label><input id="f_email" name="email" type="email" autocomplete="email" placeholder="tucorreo@gmail.com" value="${esc(saved.email)}"><span class="hint">Aquí te avisamos cuando tu pedido salga.</span><span class="err">Ingresa un correo válido.</span></div>
+                <div class="field"><label for="f_email">Correo</label><input id="f_email" name="email" type="email" autocomplete="email" placeholder="tucorreo@gmail.com" required value="${esc(saved.email)}"><span class="hint">Aquí te llega la confirmación y cada aviso de tu pedido.</span><span class="err">Ingresa un correo válido: ahí te enviamos la confirmación.</span></div>
                 <div class="field"><label for="f_dni">DNI o carné de extranjería</label><input id="f_dni" name="dni" type="text" inputmode="numeric" required value="${esc(saved.dni)}"><span class="hint">El courier lo pide al entregar.</span><span class="err">Ingresa un documento válido (8 dígitos para DNI).</span></div>
               </div>
               <div class="fieldset-title">Dirección de entrega</div>
+              <div class="zone-note">${ICON.truck.replace("<svg", '<svg width="22" height="22" style="flex:none"')}<span><b>Envío gratis a Lima Metropolitana y Callao.</b> Llega en ${esc(C.tiempoEntrega.replace(/ en Lima.*$/, ""))}. ¿Eres de provincia? <a href="#" class="linkish" data-wa="Hola, soy de provincia y quiero comprar en VISUAL Store. ¿Cuándo llegan a mi ciudad?">Avísame cuando lleguen</a></span></div>
               <div class="form-grid two">
-                <div class="field"><label for="f_dep">Departamento</label><select id="f_dep" name="departamento" required><option value="">Elige…</option>${DEPARTAMENTOS.map(d => `<option ${saved.departamento === d ? "selected" : ""}>${d}</option>`).join("")}</select><span class="err">Elige tu departamento.</span></div>
-                <div class="field"><label for="f_dis">Distrito</label><input id="f_dis" name="distrito" type="text" required value="${esc(saved.distrito)}"><span class="err">Escribe tu distrito.</span></div>
+                <div class="field"><label for="f_dep">Zona</label><select id="f_dep" name="departamento" required><option value="">Elige…</option>${Object.keys(ZONAS).map(d => `<option ${saved.departamento === d ? "selected" : ""}>${d}</option>`).join("")}</select><span class="err">Elige Lima o Callao.</span></div>
+                <div class="field"><label for="f_dis">Distrito</label><select id="f_dis" name="distrito" required><option value="">Primero elige la zona</option></select><span class="err">Elige tu distrito.</span></div>
               </div>
               <div class="field"><label for="f_dir">Dirección</label><input id="f_dir" name="direccion" type="text" autocomplete="street-address" placeholder="Av./Jr./Calle, número, dpto." required value="${esc(saved.direccion)}"><span class="err">Escribe tu dirección.</span></div>
               <div class="field"><label for="f_ref">Referencia</label><input id="f_ref" name="referencia" type="text" placeholder="Ej.: frente al parque, casa de rejas negras" required value="${esc(saved.referencia)}"><span class="hint">Ayuda al courier a encontrarte a la primera.</span><span class="err">Agrega una referencia.</span></div>
@@ -545,15 +571,42 @@
           <aside class="panel summary" aria-label="Resumen del pedido">
             <h2 style="font-size:1.3rem">Resumen</h2>
             <div id="sumLines"></div>
-            <div class="totals" style="margin-top:14px"><span>Envío</span><span class="gold">Gratis</span></div>
+            <div class="totals" style="margin-top:14px"><span>Envío a Lima y Callao</span><span class="gold">Gratis</span></div>
             <div class="totals"><span id="totLbl">Total</span><b>${money(cartTotal())}</b></div>
             <div class="notice ok" style="margin-top:14px">${ICON.shield.replace("<svg", '<svg width="22" height="22" style="flex:none;color:#25D366"')}<span id="sumNote"></span></div>
+            <div class="next-box">
+              <b>Qué pasa después de pagar</b>
+              <ol>
+                <li><span>📩</span><span>Al instante te llega un correo: <b>«Recibimos tu pedido»</b>.</span></li>
+                <li><span>📦</span><span>Lo preparamos y te avisamos.</span></li>
+                <li><span>🚚</span><span>Sale a reparto: te enviamos tu guía.</span></li>
+                <li><span>🏠</span><span>Lo recibes en ${esc(C.tiempoEntrega.replace(/ en Lima.*$/, ""))}.</span></li>
+              </ol>
+            </div>
           </aside>
         </div>
       </div>`;
     $("#sumLines").innerHTML = cart.map(i => { const p = bySlug(i.slug); return `<div class="line"><img src="${esc(p.imagenes[0])}" alt=""><div><div class="n">${esc(p.nombre)}</div><div class="v">${i.qty} × ${i.pack ? "Pack x2" : "1 unidad"}</div></div><div class="r"><b>${money(linePrice(i))}</b></div></div>`; }).join("");
 
     const form = $("#orderForm");
+    /* distritos según la zona */
+    const fillDist = keep => {
+      const list = ZONAS[form.departamento.value] || [];
+      const cur = keep || form.distrito.value;
+      form.distrito.innerHTML = list.length
+        ? `<option value="">Elige tu distrito…</option>` + list.map(d => `<option ${d === cur ? "selected" : ""}>${d}</option>`).join("")
+        : `<option value="">Primero elige la zona</option>`;
+      form.distrito.disabled = !list.length;
+    };
+    fillDist(saved.distrito);
+    form.departamento.addEventListener("change", () => fillDist(""));
+    /* pasos: se marca "Pago" cuando el cliente llega a la sección de pago */
+    const stepTo = s => {
+      const pago = s === "pago", [d, p] = $$("#coSteps li[data-s]");
+      d.classList.toggle("now", !pago); d.classList.toggle("done", pago); d.firstChild.textContent = pago ? "✓" : "2";
+      p.classList.toggle("now", pago);
+    };
+    form.addEventListener("focusin", e => stepTo(e.target.closest("#payOpts, #yapeBox, #cardBox, .check") ? "pago" : "datos"));
     const payMsg = (html, kind) => { $("#payMsg").innerHTML = html ? `<div class="notice ${kind || "warn"}"><span>${html}</span></div>` : ""; };
     const method = () => { const r = form.querySelector('input[name="pago"]:checked'); return r ? r.value : ""; };
     $("#payOpts").innerHTML = YAPE_ON
@@ -579,9 +632,9 @@
       $("#cardBox").hidden = !t;
       $("#payBtn").hidden = t || !YAPE_ON;
       $("#payHint").hidden = t || !YAPE_ON;
-      $("#introTxt").textContent = "Paga seguro aquí mismo con Yape o tarjeta. Te avisamos por correo cuando tu pedido salga.";
+      $("#introTxt").textContent = "Completa tus datos y paga seguro aquí mismo con Yape o tarjeta. Al pagar te llega un correo de confirmación.";
       $("#payBtn").innerHTML = `Pagar ${money(cartTotal())} con Yape`;
-      $("#payHint").textContent = "Al pagar, tu pedido queda confirmado al instante.";
+      $("#payHint").textContent = "Al pagar, tu pedido queda confirmado y te llega un correo al instante.";
       $("#totLbl").textContent = "Total a pagar";
       $("#sumNote").textContent = `Pago protegido por Mercado Pago. Garantía de ${C.garantiaDias} días.`;
       syncYapeNum();
@@ -596,7 +649,7 @@
       celular: v => /^9\d{8}$/.test(digits(v)),
       email: v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()),
       dni: v => /^\d{8}$/.test(v.trim()) || /^[A-Za-z0-9]{9,12}$/.test(v.trim()),
-      departamento: v => !!v, distrito: v => v.trim().length >= 3, direccion: v => v.trim().length >= 6, referencia: v => v.trim().length >= 4,
+      departamento: v => !!ZONAS[v], distrito: v => (ZONAS[form.departamento.value] || []).indexOf(v) >= 0, direccion: v => v.trim().length >= 6, referencia: v => v.trim().length >= 4,
       yapeCel: v => method() !== "yape" || /^9\d{8}$/.test(digits(v)),
       otp: v => method() !== "yape" || /^\d{6}$/.test(v.trim())
     };
@@ -619,17 +672,29 @@
     const pagar = async (tipo, data, extra, onError) => {
       const code = orderCode("VS");
       const total = cartTotal();
-      const r = await fetch(C.sheetsWebhook, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({ ...data, ...extra, tipo, codigo: code, total, items: cart.map(i => ({ slug: i.slug, pack: !!i.pack, qty: i.qty })) }) });
-      const res = await r.json();
+      const resumen = cart.map(i => `${i.qty} × ${bySlug(i.slug).nombre}${i.pack ? " (Pack x2)" : ""}`).join(" · ");
+      let res;
+      try {
+        const r = await fetch(C.sheetsWebhook, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({ ...data, ...extra, tipo, codigo: code, total, items: cart.map(i => ({ slug: i.slug, pack: !!i.pack, qty: i.qty })) }) });
+        res = await r.json();
+      } catch (err) {
+        /* sin respuesta: el pago pudo haberse hecho; guardamos el código para que el cliente lo consulte */
+        guardarPedido({ code, total, cel4: data.celular.slice(-4), email: data.email, resumen, fecha: Date.now(), dudoso: true });
+        payMsg(`No recibimos respuesta y no sabemos si el pago pasó. <b>Antes de intentarlo otra vez</b>, revisa tu correo o consulta tu pedido <b>${esc(code)}</b> en <a href="#/seguimiento/${esc(code)}" class="linkish">Estado de mi pedido</a>.`);
+        return false;
+      }
       if (res.ok) {
         track("Purchase", { value: res.total, currency: "PEN", content_ids: cart.map(i => bySlug(i.slug).dropiId) });
-        store.set("vs_last_order", { code, total: res.total, paid: true, cel4: data.celular.slice(-4) });
+        const o = { code, total: res.total, paid: !res.pendiente, pendiente: !!res.pendiente, cel4: data.celular.slice(-4), email: data.email, nombre: data.nombre.split(/\s+/)[0], distrito: data.distrito, resumen, fecha: Date.now() };
+        store.set("vs_last_order", o);
+        guardarPedido(o);
         cart = []; saveCart();
         location.hash = "#/gracias";
         return true;
       }
-      if (res.error === "precio") payMsg(`El precio de un producto cambió (nuevo total: <b>${money(res.total)}</b>). Recarga la página para ver el total actualizado; no se hizo ningún cobro.`);
+      if (res.error === "zona") payMsg(`Por ahora solo enviamos a Lima Metropolitana y Callao. <a href="#" class="linkish" data-wa="Hola, soy de provincia y quiero comprar en VISUAL Store">Escríbenos por WhatsApp</a> y te avisamos cuando lleguemos a tu ciudad. No se hizo ningún cobro.`);
+      else if (res.error === "precio") payMsg(`El precio de un producto cambió (nuevo total: <b>${money(res.total)}</b>). Recarga la página para ver el total actualizado; no se hizo ningún cobro.`);
       else if (res.error === "rechazado") payMsg(onError(res.detalle, res.status));
       else payMsg("No pudimos procesar el pago y no se hizo ningún cobro. Intenta de nuevo o escríbenos por WhatsApp.");
       return false;
@@ -685,8 +750,14 @@
       } catch (err) {
         form.otp.value = "";
         payMsg(err && err.yape ? err.message : "No pudimos conectar con Yape. Revisa tu celular y código e inténtalo de nuevo.");
-      } finally { busy = false; btn.disabled = false; if (location.hash.indexOf("checkout") >= 0) sync(); }
+      } finally { busy = false; btn.disabled = false; btn.innerHTML = `Pagar ${money(cartTotal())} con Yape`; }
     });
+  }
+
+  /* ---------- mis pedidos (en este navegador) ---------- */
+  function guardarPedido(o) {
+    const l = store.get("vs_orders", []).filter(x => x.code !== o.code);
+    l.unshift(o); store.set("vs_orders", l.slice(0, 8));
   }
 
   /* ---------- Yape (Mercado Pago) ---------- */
@@ -736,64 +807,84 @@
   }
 
   function viewThanks() {
-    setTitle("¡Gracias por tu pedido!");
     const o = store.get("vs_last_order", null);
-    if (o && o.paid) {
-      main.innerHTML = `<div class="wrap thanks">
-        <div class="ok-icon">${ICON.check}</div>
-        <h1 style="font-size:clamp(2rem,5vw,2.8rem)">¡Pago recibido!</h1>
-        <p class="muted">Tu código de pedido es</p><p class="code">${esc(o.code)}</p>
-        <p class="muted">Tu pago de <b>${money(o.total)}</b> fue aprobado. Ya estamos preparando tu pedido: te enviaremos un correo cuando salga a reparto, con tu número de guía.</p>
-        <a class="btn btn-gold" href="#/seguimiento/${esc(o.code)}">Ver estado de mi pedido</a>
-        <p style="margin-top:22px"><a class="muted" href="#/catalogo" style="text-decoration:underline">Seguir comprando</a></p>
-      </div>`;
+    if (!o || !(o.paid || o.pendiente)) {
+      setTitle("Estado de mi pedido");
+      main.innerHTML = `<div class="wrap thanks"><h1 style="font-size:2rem">¿Buscas tu pedido?</h1><p class="muted">Consulta el estado con tu código de pedido.</p><a class="btn btn-gold" href="#/seguimiento">Estado de mi pedido</a></div>`;
       return;
     }
-    main.innerHTML = `<div class="wrap thanks">
-      <div class="ok-icon">${ICON.check}</div>
-      <h1 style="font-size:clamp(2rem,5vw,2.8rem)">¡Pedido registrado!</h1>
-      ${o ? `<p class="muted">Tu código de pedido es</p><p class="code">${esc(o.code)}</p>` : ""}
-      <p class="muted">Si WhatsApp no se abrió, toca el botón para enviarnos tu pedido. Te responderemos para confirmar la entrega.</p>
-      ${o && o.url ? `<a class="btn btn-wa" href="${esc(o.url)}" target="_blank" rel="noopener">${ICON.wa} Enviar pedido por WhatsApp</a>` : ""}
-      <p style="margin-top:22px"><a class="muted" href="#/catalogo" style="text-decoration:underline">Seguir comprando</a></p>
+    setTitle(o.pendiente ? "Estamos validando tu pago" : "¡Recibimos tu pedido!");
+    const eta = esc(C.tiempoEntrega.replace(/ en Lima.*$/, ""));
+    main.innerHTML = `<div class="wrap thanks thanks-v2">
+      <div class="ok-icon ${o.pendiente ? "wait" : ""}">${o.pendiente ? "⏳" : ICON.check}</div>
+      <h1 style="font-size:clamp(2rem,5vw,2.8rem)">${o.pendiente ? "Estamos validando tu pago" : `¡Gracias${o.nombre ? ", " + esc(o.nombre) : ""}! Recibimos tu pedido`}</h1>
+      <p class="muted">${o.pendiente
+        ? "Mercado Pago está revisando tu pago. Apenas se confirme te escribimos por correo y empezamos a preparar tu pedido. No necesitas volver a pagar."
+        : `Tu pago de <b>${money(o.total)}</b> fue aprobado.${o.email ? ` Te enviamos la confirmación a <b>${esc(maskMail(o.email))}</b> (revisa también Promociones o Spam).` : ""}`}</p>
+      <div class="code-box"><span class="muted small">Tu código de pedido</span><p class="code">${esc(o.code)}</p><button class="btn btn-ghost btn-sm" type="button" id="copyCode">Copiar código</button></div>
+      <div class="panel thanks-tl">${timeline(0)}
+        <ul class="next-list">
+          <li><b>Ahora:</b> ${o.pendiente ? "validamos tu pago." : "te llegó el correo «Recibimos tu pedido»."}</li>
+          <li><b>En preparación:</b> te avisamos cuando lo estemos empacando.</li>
+          <li><b>En camino:</b> te enviamos tu número de guía.</li>
+          <li><b>Entrega:</b> en ${eta}${o.distrito ? ` en ${esc(o.distrito)}` : ""}. Ten a mano tu DNI.</li>
+        </ul>
+      </div>
+      <div class="thanks-ctas">
+        <a class="btn btn-gold" href="#/seguimiento/${esc(o.code)}">Ver estado de mi pedido</a>
+        <a class="btn btn-ghost" href="#/catalogo">Seguir comprando</a>
+      </div>
+      <p class="small muted" style="margin-top:18px">¿Dudas? <a href="#" class="linkish" data-wa="Hola, consulto por mi pedido ${esc(o.code)}">Escríbenos por WhatsApp</a> con tu código.</p>
     </div>`;
+    $("#copyCode").addEventListener("click", e => { try { navigator.clipboard.writeText(o.code); e.target.textContent = "¡Copiado!"; } catch { /* sin portapapeles */ } });
   }
 
   /* ---------- seguimiento de pedido ---------- */
-  const PASOS = ["Pagado", "En Dropi", "Despachado", "Entregado"];
-  const PASO_TXT = { "Por confirmar": "Recibido, por confirmar", "Pagado": "Pago recibido", "Confirmado": "Confirmado", "En Dropi": "Preparando tu pedido", "Despachado": "En camino", "Entregado": "Entregado", "Novedad": "Con novedad: te contactaremos", "Devuelto": "Devuelto", "Rechazado": "No entregado", "Cancelado": "Cancelado", "Revisar": "Preparando tu pedido" };
   function viewTracking(code) {
     setTitle("Estado de mi pedido");
+    const mine = store.get("vs_orders", []);
     const last = store.get("vs_last_order", null);
-    const cel4 = last && last.code === code ? last.cel4 : "";
-    main.innerHTML = `<div class="wrap" style="max-width:640px">
+    if (!code && mine.length) code = mine[0].code;
+    else if (!code && last) code = last.code;
+    const known = mine.find(x => x.code === code) || (last && last.code === code ? last : null);
+    const cel4 = known ? known.cel4 : "";
+    main.innerHTML = `<div class="wrap" style="max-width:680px">
       <nav class="crumbs" aria-label="Ruta"><a href="#/">Inicio</a> / <span>Estado de mi pedido</span></nav>
       <div class="panel">
         <h1 style="font-size:clamp(1.6rem,4vw,2.2rem)">Estado de mi pedido</h1>
+        <p class="muted small" style="margin-top:-4px">Tu código está en el correo «Recibimos tu pedido» de VISUAL Store (empieza con VS-).</p>
+        ${mine.length > 1 ? `<div class="my-orders"><span class="small muted">Tus pedidos en este equipo:</span>${mine.map(x => `<button type="button" class="chip" data-code="${esc(x.code)}" data-cel="${esc(x.cel4)}">${esc(x.code)}</button>`).join("")}</div>` : ""}
         <form id="trkForm" class="form-grid two" novalidate>
-          <div class="field"><label for="t_code">Código de pedido</label><input id="t_code" name="code" value="${esc(code || "")}" placeholder="VS-261009-AB12" required></div>
+          <div class="field"><label for="t_code">Código de pedido</label><input id="t_code" name="code" value="${esc(code || "")}" placeholder="VS-261009-AB12" autocapitalize="characters" required></div>
           <div class="field"><label for="t_cel">Últimos 4 dígitos de tu celular</label><input id="t_cel" name="cel" inputmode="numeric" maxlength="4" value="${esc(cel4 || "")}" required></div>
           <button class="btn btn-gold btn-block" type="submit" style="grid-column:1/-1">Consultar</button>
         </form>
         <div id="trkOut" style="margin-top:18px"></div>
       </div></div>`;
     const f = $("#trkForm"), out = $("#trkOut");
+    const fmt = v => { const d = new Date(v); return isNaN(d) ? "" : d.toLocaleString("es-PE", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }); };
     const consultar = async () => {
       const c = f.code.value.trim().toUpperCase(), d = f.cel.value.trim();
-      if (!/^VS-\d{6}-[A-Z0-9]{4}$/.test(c) || !/^\d{4}$/.test(d)) { out.innerHTML = `<div class="notice warn"><span>Revisa el código y los 4 dígitos.</span></div>`; return; }
+      if (!/^VS-\d{6}-[A-Z0-9]{4}$/.test(c) || !/^\d{4}$/.test(d)) { out.innerHTML = `<div class="notice warn"><span>Revisa el código (por ejemplo VS-261009-AB12) y los 4 dígitos.</span></div>`; return; }
       out.innerHTML = `<p class="muted">Consultando…</p>`;
       try {
         const r = await (await fetch(`${C.sheetsWebhook}?accion=estado&codigo=${encodeURIComponent(c)}&cel=${d}`)).json();
-        if (!r.ok) { out.innerHTML = `<div class="notice warn"><span>No encontramos ese pedido. Si lo hiciste hace unos minutos, inténtalo en un rato o escríbenos por WhatsApp.</span></div>`; return; }
-        const idx = r.estado === "Revisar" ? 1 : PASOS.indexOf(r.estado === "Confirmado" ? "En Dropi" : r.estado);
-        out.innerHTML = `<p><b>${esc(r.codigo)}</b> · ${esc(r.productos)}</p>
-          <p class="track-now">${esc(PASO_TXT[r.estado] || r.estado)}</p>
-          ${idx >= 0 ? `<ol class="track">${PASOS.map((p, i) => `<li class="${i <= idx ? "done" : ""}">${esc(PASO_TXT[p])}</li>`).join("")}</ol>` : ""}
-          ${r.guia ? `<p>Guía: <b>${esc(r.guia)}</b>${r.transportadora ? ` · ${esc(r.transportadora)}` : ""}</p>` : ""}
-          <p class="small muted">¿Dudas? <a href="#" data-wa="Hola, consulto por mi pedido ${esc(r.codigo)}" style="text-decoration:underline">Escríbenos por WhatsApp</a></p>`;
+        if (!r.ok) { out.innerHTML = `<div class="notice warn"><span>No encontramos ese pedido. Revisa el código y los 4 dígitos. Si lo hiciste hace unos minutos, inténtalo en un rato o <a href="#" class="linkish" data-wa="Hola, no encuentro mi pedido ${esc(c)}">escríbenos por WhatsApp</a>.</span></div>`; return; }
+        const idx = PASO_DE[r.estado] ?? -1;
+        const [tit, desc] = ESTADO_TXT[r.estado] || [r.estado, ""];
+        const bad = idx < 0, nov = r.estado === "Novedad";
+        out.innerHTML = `<div class="trk-head"><div><span class="small muted">Pedido</span><p class="trk-code">${esc(r.codigo)}</p></div>${r.total ? `<div style="text-align:right"><span class="small muted">Total pagado</span><p class="trk-code">${money(r.total)}</p></div>` : ""}</div>
+          <p class="small muted" style="margin:0 0 6px">${esc(r.productos || "")}</p>
+          <p class="track-now ${bad || nov ? "warn" : ""}">${esc(tit)}</p>
+          <p class="muted" style="margin-top:-4px">${esc(desc)}</p>
+          ${bad ? "" : timeline(r.estado === "Entregado" ? 4 : idx)}
+          ${r.guia ? `<div class="notice ok"><span>Número de guía: <b>${esc(r.guia)}</b>${r.transportadora ? ` · ${esc(r.transportadora)}` : ""}</span></div>` : ""}
+          <p class="small muted">${r.fecha ? `Pedido: ${esc(fmt(r.fecha))}` : ""}${r.actualizado ? ` · Última actualización: ${esc(fmt(r.actualizado))}` : ""}</p>
+          <p class="small muted">Te avisamos por correo en cada paso. ¿Dudas? <a href="#" class="linkish" data-wa="Hola, consulto por mi pedido ${esc(r.codigo)}">Escríbenos por WhatsApp</a></p>`;
       } catch (e) { out.innerHTML = `<div class="notice warn"><span>No pudimos consultar ahora. Inténtalo de nuevo en un momento.</span></div>`; }
     };
     f.addEventListener("submit", e => { e.preventDefault(); consultar(); });
+    $$(".my-orders .chip").forEach(b => b.addEventListener("click", () => { f.code.value = b.dataset.code; f.cel.value = b.dataset.cel; consultar(); }));
     if (code && cel4) consultar();
   }
 
@@ -836,9 +927,10 @@
       <h2>Condiciones</h2><ul><li>El producto debe estar completo, con sus accesorios y, de ser posible, en su empaque.</li><li>La garantía no cubre daños por mal uso, golpes, humedad o manipulación indebida.</li><li>Productos de cuidado personal que ya fueron usados solo se cambian por falla de fábrica.</li></ul>
       <h2>Devoluciones de dinero</h2><p>Si no podemos reponer el producto, te devolvemos el importe pagado por el mismo medio de pago en un plazo máximo de 15 días hábiles.</p>`],
     envios: ["Envíos", `
-      <p>Trabajamos con couriers nacionales para llevar tu pedido a todo el Perú.</p>
-      <h2>Cobertura</h2><p>Enviamos a todo el Perú. El envío es gratis y el pago se hace en línea con Yape o tarjeta al comprar.</p>
-      <h2>Plazos</h2><p>${esc(C.tiempoEntrega)}. En zonas alejadas puede tomar un poco más. Cuando tu pedido sale te avisamos por correo con tu número de guía, y puedes ver el estado en <a href="#/seguimiento/">Estado de mi pedido</a>.</p>
+      <p>Trabajamos con couriers para llevar tu pedido hasta tu puerta.</p>
+      <h2>Cobertura</h2><p>Por ahora enviamos a todos los distritos de Lima Metropolitana y Callao. El envío es gratis y el pago se hace en línea con Yape o tarjeta al comprar. Muy pronto llegaremos a provincias.</p>
+      <h2>Plazos</h2><p>${esc(C.tiempoEntrega)}. Puede variar por feriados, clima o zonas de difícil acceso.</p>
+      <h2>Avisos</h2><p>Apenas pagas te enviamos un correo confirmando que recibimos tu pedido. Luego te avisamos cuando está en preparación, cuando sale a reparto (con tu número de guía) y cuando se entrega. Puedes ver el estado cuando quieras en <a href="#/seguimiento">Estado de mi pedido</a>.</p>
       <h2>Al recibir</h2><p>Ten a mano tu documento de identidad y revisa el paquete frente al courier.</p>`]
   };
   function viewLegal(key) {
