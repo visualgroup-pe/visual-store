@@ -888,6 +888,35 @@
     if (code && cel4) consultar();
   }
 
+  /* ---------- aprobación de pedidos para Dropi (solo el dueño, enlace del correo) ---------- */
+  function viewApprove(code, token) {
+    setTitle("Enviar pedido a Dropi");
+    document.querySelector('meta[name="robots"]') || document.head.insertAdjacentHTML("beforeend", '<meta name="robots" content="noindex">');
+    main.innerHTML = `<div class="wrap" style="max-width:640px"><div class="panel" style="margin:28px 0 64px"><h1 style="font-size:clamp(1.5rem,4vw,2rem)">Enviar a Dropi</h1><div id="apOut"><p class="muted">Cargando pedido…</p></div></div></div>`;
+    const out = $("#apOut");
+    const api = (accion) => fetch(`${C.sheetsWebhook}?accion=${accion}&c=${encodeURIComponent(code)}&t=${encodeURIComponent(token)}`).then(r => r.json());
+    const fail = m => `<div class="notice warn"><span>${esc(m)}</span></div>`;
+    api("aprobar").then(r => {
+      if (!r.ok) { out.innerHTML = fail(r.error || "Enlace no válido."); return; }
+      const lista = (r.items || []).map(i => `<li>${esc(i.unidades)} u. · ${esc(i.producto)} <span class="muted small">(ID Dropi ${esc(i.dropiId)})</span></li>`).join("");
+      if (r.dropi) { out.innerHTML = `<div class="notice ok"><span>✅ <b>${esc(r.codigo)}</b> ya está en Dropi (orden <b>${esc(r.dropi)}</b>). Estado: ${esc(r.estado)}.</span></div>`; return; }
+      out.innerHTML = `<p><b>${esc(r.codigo)}</b> · ${esc(r.distrito || "")} · Cobrado: <b>${money(r.total)}</b> · Estado: ${esc(r.estado)}</p>
+        <ul style="line-height:1.7">${lista || `<li>${esc(r.productos)}</li>`}</ul>
+        ${r.nota ? `<div class="notice warn"><span>Último intento: ${esc(r.nota)}</span></div>` : ""}
+        <div class="notice" style="margin:14px 0;border:1px dashed var(--gold)"><span>Antes de continuar, recarga tu wallet de Dropi con el costo de <b>este</b> pedido (precio proveedor + envío).</span></div>
+        <button class="btn btn-gold btn-block" id="apGo" type="button">Sí, enviar a Dropi</button>
+        <div id="apMsg" style="margin-top:14px"></div>`;
+      $("#apGo").addEventListener("click", async e => {
+        const b = e.currentTarget; b.disabled = true; b.textContent = "Enviando a Dropi…"; $("#apMsg").innerHTML = "";
+        try {
+          const x = await api("aprobar_ok");
+          if (x.ok) { b.textContent = "Enviado ✓"; $("#apMsg").innerHTML = `<div class="notice ok"><span>✅ Listo: orden Dropi <b>${esc(x.id)}</b>. El cliente recibió el correo «Tu pedido está en preparación».</span></div>`; }
+          else { b.disabled = false; b.textContent = "Reintentar"; $("#apMsg").innerHTML = fail(x.error || "No se pudo crear la orden."); }
+        } catch (err) { b.disabled = false; b.textContent = "Reintentar"; $("#apMsg").innerHTML = fail("No hubo respuesta. Revisa la hoja antes de reintentar."); }
+      });
+    }).catch(() => { out.innerHTML = fail("No pudimos cargar el pedido. Inténtalo de nuevo en un momento."); });
+  }
+
   function viewHowTo() {
     setTitle("Cómo comprar");
     main.innerHTML = `<section class="section"><div class="wrap">
@@ -1024,6 +1053,7 @@
     else if (parts[0] === "checkout") viewCheckout();
     else if (parts[0] === "gracias") viewThanks();
     else if (parts[0] === "seguimiento") viewTracking(decodeURIComponent(parts[1] || ""));
+    else if (parts[0] === "aprobar") viewApprove(decodeURIComponent(parts[1] || ""), parts[2] || "");
     else if (parts[0] === "como-comprar") viewHowTo();
     else if (parts[0] === "preguntas") viewFaq();
     else if (parts[0] === "legal") viewLegal(parts[1]);
