@@ -894,7 +894,7 @@
     document.querySelector('meta[name="robots"]') || document.head.insertAdjacentHTML("beforeend", '<meta name="robots" content="noindex">');
     main.innerHTML = `<div class="wrap" style="max-width:640px"><div class="panel" style="margin:28px 0 64px"><h1 style="font-size:clamp(1.5rem,4vw,2rem)">Enviar a Dropi</h1><div id="apOut"><p class="muted">Cargando pedido…</p></div></div></div>`;
     const out = $("#apOut");
-    const api = (accion) => fetch(`${C.sheetsWebhook}?accion=${accion}&c=${encodeURIComponent(code)}&t=${encodeURIComponent(token)}`).then(r => r.json());
+    const api = (accion) => fetch(`${C.sheetsWebhook}?accion=${accion}&codigo=${encodeURIComponent(code)}&tok=${encodeURIComponent(token)}`).then(r => r.json());
     const fail = m => `<div class="notice warn"><span>${esc(m)}</span></div>`;
     api("aprobar").then(r => {
       if (!r.ok) { out.innerHTML = fail(r.error || "Enlace no válido."); return; }
