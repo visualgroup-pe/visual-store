@@ -348,16 +348,19 @@
   const catsBySize = () => [...new Set(P.map(p => p.categoria))].sort((a, b) => P.filter(p => p.categoria === b).length - P.filter(p => p.categoria === a).length);
   const rank = p => (p.flash ? 3 : 0) + (p.top ? 2 : 0) + (p.destacado ? 1 : 0);
 
+  /* Fotos que no se muestran en banners ni en el popup (fajas, bodies y trajes de baño) */
+  const enBanner = p => !/^(Fajas y bodies|Trajes de baño)$/.test(p.sub) && !/traje de ba[ñn]o|ropa de ba[ñn]o|bikini/i.test(p.nombre);
   const heroCarousel = () => {
     const flash = P.filter(p => p.flash);
     const maxOff = Math.max(0, ...flash.map(p => p.flashOff || 0));
-    const packs = P.slice().sort((a, b) => ahorro(b) - ahorro(a)).slice(0, 3);
-    const top = P.find(p => p.top === 1) || P[0];
+    const vis = P.filter(enBanner);
+    const packs = vis.slice().sort((a, b) => ahorro(b) - ahorro(a)).slice(0, 3);
+    const top = vis.find(p => p.top === 1) || vis[0];
     const imgs = (arr, cls) => `<div class="hs-imgs ${cls || ""}">${arr.slice(0, 3).map(p => `<img src="${esc(p.imagenes[0])}" alt="" loading="lazy">`).join("")}</div>`;
     const ct = campTime();
     const slides = [];
     if (ct) slides.push(`<div class="hs hs-camp"><div class="hs-txt"><span class="hs-kicker">${ct.fase === "pronto" ? "Se viene" : "¡Ya empezó!"}</span><h2 class="hs-big">${esc(CAMP.nombre)}</h2><p>${esc(CAMP.texto || "Los mejores precios del año en tecnología, belleza y hogar.")}</p><div class="hs-count"><span>${ct.fase === "pronto" ? "Empieza en" : "Termina en"}</span><b data-camp-countdown>${dhm(ct.hasta - Date.now())}</b></div><button class="btn btn-gold" type="button" data-gocat="Todos">${ct.fase === "pronto" ? "Ver productos" : "Ver ofertas"}</button></div>${imgs(packs)}</div>`);
-    if (flash.length) slides.push(`<div class="hs hs-flash"><div class="hs-txt"><span class="hs-kicker">⚡ Ofertas flash · solo hoy</span><span class="hs-pre">Hasta</span><h2 class="hs-big">−${maxOff}%</h2><p>${flash.length} productos con precio especial hasta la medianoche.</p><div class="hs-count"><span>Terminan en</span><b data-countdown>${window.VS_FLASH.left()}</b></div><button class="btn btn-gold" type="button" data-scroll="flash">Ver ofertas de hoy</button></div>${imgs(flash)}</div>`);
+    if (flash.length) slides.push(`<div class="hs hs-flash"><div class="hs-txt"><span class="hs-kicker">⚡ Ofertas flash · solo hoy</span><span class="hs-pre">Hasta</span><h2 class="hs-big">−${maxOff}%</h2><p>${flash.length} productos con precio especial hasta la medianoche.</p><div class="hs-count"><span>Terminan en</span><b data-countdown>${window.VS_FLASH.left()}</b></div><button class="btn btn-gold" type="button" data-scroll="flash">Ver ofertas de hoy</button></div>${imgs(flash.filter(enBanner))}</div>`);
     if (ahorro(packs[0])) slides.push(`<div class="hs hs-pack"><div class="hs-txt"><span class="hs-kicker">🔥 Packs x2</span><h2 class="hs-big">Lleva 2<br>y ahorra</h2><p>Hasta <b>${money(ahorro(packs[0]))}</b> de ahorro llevando dos unidades.</p><button class="btn btn-gold" type="button" data-gocat="Todos" data-sort="save">Ver packs con más ahorro</button></div>${imgs(packs)}</div>`);
     slides.push(`<div class="hs hs-top"><div class="hs-txt"><span class="hs-kicker">🏆 El más pedido</span><h2 class="hs-name">${esc(top.nombre)}</h2><p class="hs-price">${money(top.precio)} <small>o 2 por ${money(top.precioPack)}</small></p><a class="btn btn-gold" href="#/p/${top.slug}">Comprar ahora</a></div><div class="hs-imgs hs-one"><img src="${esc(top.imagenes[0])}" alt="${esc(top.nombre)}"></div></div>`);
     slides.push(`<div class="hs hs-pay"><div class="hs-txt"><span class="hs-kicker">💳 Paga como quieras</span><h2 class="hs-big">Yape o tarjeta</h2><p>Hasta 12 cuotas con tarjeta · Envío gratis a todo Lima y Callao · Garantía de ${C.garantiaDias} días.</p><button class="btn btn-gold" type="button" data-gocat="Todos">Ver el catálogo</button></div><div class="hs-icons" aria-hidden="true"><span>💜</span><span>💳</span><span>🚚</span></div></div>`);
@@ -417,7 +420,7 @@
           <span class="hs-kicker">⚡ Solo por hoy</span>
           <h2 class="pop-big"><small>hasta</small> −${maxOff}%</h2>
           <p class="muted" style="margin:0">En ${flash.length} productos seleccionados. Envío gratis y pago con Yape o tarjeta.</p>
-          <div class="pop-imgs">${flash.slice(0, 3).map(p => `<a href="#/p/${p.slug}" data-popclose><img src="${esc(p.imagenes[0])}" alt="${esc(p.nombre)}"><b>${money(p.precio)}</b></a>`).join("")}</div>
+          <div class="pop-imgs">${flash.filter(enBanner).slice(0, 3).map(p => `<a href="#/p/${p.slug}" data-popclose><img src="${esc(p.imagenes[0])}" alt="${esc(p.nombre)}"><b>${money(p.precio)}</b></a>`).join("")}</div>
           <div class="hs-count"><span>Terminan en</span><b data-countdown>${window.VS_FLASH.left()}</b></div>
           <button class="btn btn-gold btn-block" type="button" data-popgo>Ver las ofertas de hoy</button>
           <button class="linkish pop-later" type="button" data-popclose>Ahora no</button>

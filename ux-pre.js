@@ -46,7 +46,6 @@
       ["Cuidado corporal", /corporal|cuerpo|loci[oó]n|exfoliante|scrub|jab[oó]n|ducha|shower|manos|pies|desodorante|talco|colonia|vaselina|aceite|crema|repel|antibacterial|[ií]ntimo|b[aá]lsamo|polvo|sal de ba[ñn]o|aloe/i]
     ],
     Moda: [
-      ["Trajes de baño", /ba[ñn]o/i],
       ["Fajas y bodies", /faja|body|moldead|busto/i],
       ["Mochilas", /mochila|morral/i],
       ["Carteras y bolsos", /cartera|bolso|lonchera|crossody|ri[ñn]onera|pa[ñn]alera/i],
