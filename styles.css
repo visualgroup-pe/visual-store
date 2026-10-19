@@ -417,13 +417,12 @@ body.has-sticky .wa-float{bottom:calc(84px + env(safe-area-inset-bottom))}
 .hs-top{background:radial-gradient(110% 110% at 90% 10%,rgba(40,136,162,.5),transparent 55%),linear-gradient(135deg,#071224,#0d2244)}
 .hs-pay{background:radial-gradient(120% 120% at 100% 0,rgba(116,34,132,.55),transparent 55%),linear-gradient(135deg,#0b1328,#1b0f2e)}
 .hs-camp{background:radial-gradient(120% 120% at 100% 0,rgba(255,154,61,.5),transparent 55%),linear-gradient(135deg,#200b0b,#2b1407)}
-.hs-new{background:radial-gradient(120% 120% at 100% 0,rgba(40,136,162,.5),transparent 55%),radial-gradient(90% 90% at 0 100%,rgba(200,160,64,.3),transparent 60%),linear-gradient(135deg,#071224,#10264a)}
 .hs-txt{position:relative;z-index:1;color:#F0F4F8;max-width:560px}
 .hs-kicker{display:inline-block;font-size:.8rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.12);color:#fff;margin-bottom:12px}
 .hs-big{font-family:Syne,Inter,system-ui,sans-serif;font-weight:800;font-size:clamp(2.6rem,9vw,5.2rem);line-height:.95;margin:0 0 12px;color:#fff;letter-spacing:-.02em}
 .hs-big small{font-size:.38em;font-weight:700;vertical-align:middle;margin-right:4px;opacity:.85}
 .hs-flash .hs-big{background:linear-gradient(90deg,#FF5A36,#FFB13D);-webkit-background-clip:text;background-clip:text;color:transparent}
-.hs-pack .hs-big,.hs-camp .hs-big,.hs-new .hs-big{background:linear-gradient(90deg,#E7CF86,#C8A040);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hs-pack .hs-big,.hs-camp .hs-big{background:linear-gradient(90deg,#E7CF86,#C8A040);-webkit-background-clip:text;background-clip:text;color:transparent}
 .hs-name{font-family:Syne,Inter,system-ui,sans-serif;font-size:clamp(1.6rem,4.5vw,2.6rem);line-height:1.05;margin:0 0 10px;color:#fff}
 .hs-txt .hs-price{font-family:Syne,Inter,system-ui,sans-serif;font-weight:800;font-size:clamp(2rem,6vw,3rem);color:#E7CF86;margin:0 0 16px}
 .hs-txt .hs-price small{font-family:Inter,system-ui,sans-serif;font-weight:500;font-size:.4em;color:#cfd8e3;margin-left:6px}

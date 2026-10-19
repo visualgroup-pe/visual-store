@@ -175,8 +175,8 @@
   };
 
   const promoBand = () => {
-    const max = Math.max(0, ...P.map(ahorro));
-    const items = (max ? ["🔥 SALE: packs x2 con descuento", `Ahorra hasta ${money(max)} llevando 2`] : ["✨ Catálogo renovado", "Nuevos productos muy pronto"]).concat(["🚚 Envío gratis", "💳 Paga con Yape o tarjeta", "🛡️ Garantía de " + C.garantiaDias + " días"]);
+    const max = Math.max(...P.map(ahorro));
+    const items = ["🔥 SALE: packs x2 con descuento", `Ahorra hasta ${money(max)} llevando 2`, "🚚 Envío gratis", "💳 Paga con Yape o tarjeta", "🛡️ Garantía de " + C.garantiaDias + " días"];
     const row = items.map(t => `<span>${esc(t)}</span>`).join('<i aria-hidden="true">✦</i>');
     return `<div class="promo-band" role="note"><div class="promo-track">${row}<i aria-hidden="true">✦</i>${row}<i aria-hidden="true">✦</i></div></div>`;
   };
@@ -209,6 +209,7 @@
   /* ---------- vistas ---------- */
   function viewHome() {
     setTitle();
+    const hero = P.find(p => p.top === 1) || P.find(p => p.destacado) || P[0];
     const featured = P.filter(p => p.destacado);
     main.innerHTML = `
       ${heroCarousel()}
@@ -218,16 +219,16 @@
       ${flashSection()}
       ${topFive()}
       ${catSections()}
-      ${featured.length ? `<section class="section">
+      <section class="section">
         <div class="wrap">
           <div class="section-head"><div><span class="eyebrow">Favoritos</span><h2>Destacados</h2></div><a class="btn btn-ghost" href="#/catalogo">Ver todo el catálogo</a></div>
           <div class="grid grid-3">${featured.map(card).join("")}</div>
         </div>
-      </section>` : ""}
-      <section class="section"${featured.length ? ' style="padding-top:0"' : ""}>
+      </section>
+      <section class="section" style="padding-top:0">
         <div class="wrap">
-          ${P.length ? `<div class="section-head"><div><span class="eyebrow">Catálogo</span><h2>Todo lo que tenemos</h2></div></div>
-          ${catalogBlock()}` : soonBand()}
+          <div class="section-head"><div><span class="eyebrow">Catálogo</span><h2>Todo lo que tenemos</h2></div></div>
+          ${catalogBlock()}
         </div>
       </section>
       <section class="section" id="como" style="padding-top:0">
@@ -273,12 +274,7 @@
   const catChips = () => { const b = base(); const cats = ["Todos", ...new Set(P.map(p => p.categoria))]; return cats.map(c => { const n = c === "Todos" ? b.length : b.filter(p => p.categoria === c).length; return `<button class="chip" data-cat="${esc(c)}" aria-pressed="${c === F.cat}"${n ? "" : " disabled"}>${CAT_ICON[c] || ""} ${esc(CAT_LABEL[c] || c)} <span class="chip-n">${n}</span></button>`; }).join(""); };
   const subChips = () => { if (F.cat === "Todos") return ""; const b = base().filter(p => p.categoria === F.cat); const subs = [...new Set(b.map(p => p.sub))].sort((x, y) => b.filter(p => p.sub === y).length - b.filter(p => p.sub === x).length); if (subs.length < 2) return ""; return `<button class="chip chip-sub" data-sub="" aria-pressed="${!F.sub}">Todo ${esc(CAT_LABEL[F.cat] || F.cat)}</button>` + subs.map(s => `<button class="chip chip-sub" data-sub="${esc(s)}" aria-pressed="${s === F.sub}">${esc(s)} <span class="chip-n">${b.filter(p => p.sub === s).length}</span></button>`).join(""); };
   const countHTML = () => { const n = filtered().length; const active = F.cat !== "Todos" || F.sub || F.q || F.price || F.flash || F.sort !== "rec"; return `<b>${n}</b> producto${n === 1 ? "" : "s"}${active ? ' · <button type="button" class="linkish" data-reset>Limpiar filtros</button>' : ""}`; };
-  const soonBand = () => `<div class="band">
-      <div><span class="eyebrow">Catálogo renovado</span><h2>Nuevos productos muy pronto</h2><p class="muted" style="margin:6px 0 0">Estamos preparando una nueva selección. Escríbenos y te avisamos apenas esté lista.</p></div>
-      <a class="btn btn-wa" href="#" data-wa="Hola, quiero que me avisen cuando lleguen los nuevos productos">${ICON.wa} Avísame</a>
-    </div>`;
   function catalogBlock() {
-    if (!P.length) return soonBand();
     shown = 24;
     const flashN = P.filter(p => p.flash).length;
     return `<div class="cat-tools">
@@ -358,17 +354,13 @@
     const packs = P.slice().sort((a, b) => ahorro(b) - ahorro(a)).slice(0, 3);
     const top = P.find(p => p.top === 1) || P[0];
     const imgs = (arr, cls) => `<div class="hs-imgs ${cls || ""}">${arr.slice(0, 3).map(p => `<img src="${esc(p.imagenes[0])}" alt="" loading="lazy">`).join("")}</div>`;
-    const icons = (...e) => `<div class="hs-icons" aria-hidden="true">${e.map(x => `<span>${x}</span>`).join("")}</div>`;
-    /* sin productos, los botones llevan a WhatsApp en lugar de al catálogo vacío */
-    const cta = (label, attrs, waText) => P.length ? `<button class="btn btn-gold" type="button" ${attrs}>${label}</button>` : `<a class="btn btn-gold" href="#" data-wa="${esc(waText)}">Avísame por WhatsApp</a>`;
     const ct = campTime();
     const slides = [];
-    if (ct) slides.push(`<div class="hs hs-camp"><div class="hs-txt"><span class="hs-kicker">${ct.fase === "pronto" ? "Se viene" : "¡Ya empezó!"}</span><h2 class="hs-big">${esc(CAMP.nombre)}</h2><p>${esc(CAMP.texto || "Los mejores precios del año en tecnología, belleza y hogar.")}</p><div class="hs-count"><span>${ct.fase === "pronto" ? "Empieza en" : "Termina en"}</span><b data-camp-countdown>${dhm(ct.hasta - Date.now())}</b></div>${cta(ct.fase === "pronto" ? "Ver productos" : "Ver ofertas", 'data-gocat="Todos"', `Hola, quiero que me avisen de las ofertas de ${CAMP.nombre}`)}</div>${packs.length ? imgs(packs) : icons("🎧", "✨", "🏠")}</div>`);
-    if (!P.length) slides.push(`<div class="hs hs-new"><div class="hs-txt"><span class="hs-kicker">✨ Catálogo renovado</span><h2 class="hs-big">Muy<br>pronto</h2><p>Estamos preparando una nueva selección de tecnología, belleza y hogar. Escríbenos y sé el primero en enterarte.</p>${cta("", "", "Hola, quiero que me avisen cuando lleguen los nuevos productos")}</div>${icons("📦", "🚀", "🎁")}</div>`);
+    if (ct) slides.push(`<div class="hs hs-camp"><div class="hs-txt"><span class="hs-kicker">${ct.fase === "pronto" ? "Se viene" : "¡Ya empezó!"}</span><h2 class="hs-big">${esc(CAMP.nombre)}</h2><p>${esc(CAMP.texto || "Los mejores precios del año en tecnología, belleza y hogar.")}</p><div class="hs-count"><span>${ct.fase === "pronto" ? "Empieza en" : "Termina en"}</span><b data-camp-countdown>${dhm(ct.hasta - Date.now())}</b></div><button class="btn btn-gold" type="button" data-gocat="Todos">${ct.fase === "pronto" ? "Ver productos" : "Ver ofertas"}</button></div>${imgs(packs)}</div>`);
     if (flash.length) slides.push(`<div class="hs hs-flash"><div class="hs-txt"><span class="hs-kicker">⚡ Ofertas flash · solo hoy</span><span class="hs-pre">Hasta</span><h2 class="hs-big">−${maxOff}%</h2><p>${flash.length} productos con precio especial hasta la medianoche.</p><div class="hs-count"><span>Terminan en</span><b data-countdown>${window.VS_FLASH.left()}</b></div><button class="btn btn-gold" type="button" data-scroll="flash">Ver ofertas de hoy</button></div>${imgs(flash)}</div>`);
-    if (packs.length && ahorro(packs[0])) slides.push(`<div class="hs hs-pack"><div class="hs-txt"><span class="hs-kicker">🔥 Packs x2</span><h2 class="hs-big">Lleva 2<br>y ahorra</h2><p>Hasta <b>${money(ahorro(packs[0]))}</b> de ahorro llevando dos unidades.</p><button class="btn btn-gold" type="button" data-gocat="Todos" data-sort="save">Ver packs con más ahorro</button></div>${imgs(packs)}</div>`);
-    if (top) slides.push(`<div class="hs hs-top"><div class="hs-txt"><span class="hs-kicker">🏆 El más pedido</span><h2 class="hs-name">${esc(top.nombre)}</h2><p class="hs-price">${money(top.precio)} <small>o 2 por ${money(top.precioPack)}</small></p><a class="btn btn-gold" href="#/p/${top.slug}">Comprar ahora</a></div><div class="hs-imgs hs-one"><img src="${esc(top.imagenes[0])}" alt="${esc(top.nombre)}"></div></div>`);
-    slides.push(`<div class="hs hs-pay"><div class="hs-txt"><span class="hs-kicker">💳 Paga como quieras</span><h2 class="hs-big">Yape o tarjeta</h2><p>Hasta 12 cuotas con tarjeta · Envío gratis a todo Lima y Callao · Garantía de ${C.garantiaDias} días.</p>${cta("Ver el catálogo", 'data-gocat="Todos"', "Hola, quiero información sobre sus productos")}</div>${icons("💜", "💳", "🚚")}</div>`);
+    if (ahorro(packs[0])) slides.push(`<div class="hs hs-pack"><div class="hs-txt"><span class="hs-kicker">🔥 Packs x2</span><h2 class="hs-big">Lleva 2<br>y ahorra</h2><p>Hasta <b>${money(ahorro(packs[0]))}</b> de ahorro llevando dos unidades.</p><button class="btn btn-gold" type="button" data-gocat="Todos" data-sort="save">Ver packs con más ahorro</button></div>${imgs(packs)}</div>`);
+    slides.push(`<div class="hs hs-top"><div class="hs-txt"><span class="hs-kicker">🏆 El más pedido</span><h2 class="hs-name">${esc(top.nombre)}</h2><p class="hs-price">${money(top.precio)} <small>o 2 por ${money(top.precioPack)}</small></p><a class="btn btn-gold" href="#/p/${top.slug}">Comprar ahora</a></div><div class="hs-imgs hs-one"><img src="${esc(top.imagenes[0])}" alt="${esc(top.nombre)}"></div></div>`);
+    slides.push(`<div class="hs hs-pay"><div class="hs-txt"><span class="hs-kicker">💳 Paga como quieras</span><h2 class="hs-big">Yape o tarjeta</h2><p>Hasta 12 cuotas con tarjeta · Envío gratis a todo Lima y Callao · Garantía de ${C.garantiaDias} días.</p><button class="btn btn-gold" type="button" data-gocat="Todos">Ver el catálogo</button></div><div class="hs-icons" aria-hidden="true"><span>💜</span><span>💳</span><span>🚚</span></div></div>`);
     return `<section class="hero-car" aria-roledescription="carrusel" aria-label="Promociones">
       <div class="hc-track">${slides.map((s, i) => `<div class="hc-slide" role="group" aria-roledescription="diapositiva" aria-label="${i + 1} de ${slides.length}"${i ? ' aria-hidden="true"' : ""}>${s}</div>`).join("")}</div>
       ${slides.length > 1 ? `<button class="hc-nav hc-prev" type="button" aria-label="Promoción anterior">‹</button><button class="hc-nav hc-next" type="button" aria-label="Promoción siguiente">›</button>
